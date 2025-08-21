@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zayyan/services/storage_service.dart';
-import 'package:zayyan/screens/home_screen.dart';
+import 'package:zayyan/screens/home/home_screen.dart';
 import 'package:zayyan/screens/orders_screen.dart';
 import 'package:zayyan/screens/messages_screen.dart';
 import 'package:zayyan/screens/profile_screen.dart';
