@@ -42,7 +42,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(_tr('Messages', 'الرسائل')),
-          centerTitle: true,
+          centerTitle: false,
         ),
         body: _orders.isEmpty
             ? Center(

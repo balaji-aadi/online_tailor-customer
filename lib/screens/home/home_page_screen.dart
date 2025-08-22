@@ -334,35 +334,58 @@ class _FeaturedTailorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Card(
-      margin: const EdgeInsets.only(right: 12),
+      margin: const EdgeInsets.only(right: 12, bottom: 8),
+      elevation: 3,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: SizedBox(
         width: 160,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Image Placeholder
             ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(8)),
-              child: Image.network(
-                tailor.profileImage,
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
                 height: 120,
                 width: 160,
-                fit: BoxFit.cover,
+                color: Colors.grey[300],
+                child: const Icon(
+                  Icons.person,
+                  size: 64,
+                  color: Colors.grey,
+                ),
               ),
             ),
+
+            // Content Padding
             Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     language == 'ar' ? tailor.nameAr : tailor.name,
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
+                  const SizedBox(height: 4),
                   Text(
                     language == 'ar' ? tailor.locationAr : tailor.location,
-                    style: Theme.of(context).textTheme.bodySmall,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.outline,
+                      fontSize: 12,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
@@ -392,8 +415,12 @@ class _TailorCard extends StatelessWidget {
       onTap: onTap,
       child: Card(
         child: ListTile(
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(tailor.profileImage),
+         leading: CircleAvatar(
+            backgroundColor: Colors.grey[300],
+            child: const Icon(
+              Icons.person,
+              color: Colors.grey,
+            ),
           ),
           title: Text(language == 'ar' ? tailor.nameAr : tailor.name),
           subtitle:

@@ -26,7 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final language = await StorageService.getLanguage();
     final user = await StorageService.getCurrentUser();
     final settings = await StorageService.getNotificationSettings();
-    
+
     setState(() {
       _selectedLanguage = language;
       _currentUser = user;
@@ -46,7 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(_tr('Profile', 'الملف الشخصي')),
-          centerTitle: true,
+          centerTitle: false,
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -73,7 +73,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 )
                               : Text(
-                                  _currentUser!.name.substring(0, 1).toUpperCase(),
+                                  _currentUser!.name
+                                      .substring(0, 1)
+                                      .toUpperCase(),
                                   style: TextStyle(
                                     fontSize: 24,
                                     color: theme.colorScheme.onPrimaryContainer,
@@ -137,10 +139,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          _tr(
-                            'Sign in to access all features',
-                            'سجل دخولك للوصول لجميع الميزات'
-                          ),
+                          _tr('Sign in to access all features',
+                              'سجل دخولك للوصول لجميع الميزات'),
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.outline,
                           ),
@@ -162,7 +162,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _MenuItem(
                       icon: Icons.straighten,
                       title: _tr('My Measurements', 'قياساتي'),
-                      subtitle: _tr('Manage your body measurements', 'إدارة قياسات جسمك'),
+                      subtitle: _tr(
+                          'Manage your body measurements', 'إدارة قياسات جسمك'),
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => const MeasurementScreen(),
@@ -172,7 +173,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _MenuItem(
                       icon: Icons.favorite,
                       title: _tr('Favorites', 'المفضلة'),
-                      subtitle: _tr('Your favorite tailors', 'الخياطون المفضلون لديك'),
+                      subtitle: _tr(
+                          'Your favorite tailors', 'الخياطون المفضلون لديك'),
                       onTap: () => _showFavorites(),
                     ),
                   ],
@@ -195,7 +197,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     title: _tr('Order Updates', 'تحديثات الطلبات'),
                     trailing: Switch(
                       value: _notificationSettings['orderUpdates'] ?? true,
-                      onChanged: (value) => _updateNotificationSetting('orderUpdates', value),
+                      onChanged: (value) =>
+                          _updateNotificationSetting('orderUpdates', value),
                     ),
                   ),
                   _MenuItem(
@@ -203,7 +206,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     title: _tr('Messages', 'الرسائل'),
                     trailing: Switch(
                       value: _notificationSettings['messages'] ?? true,
-                      onChanged: (value) => _updateNotificationSetting('messages', value),
+                      onChanged: (value) =>
+                          _updateNotificationSetting('messages', value),
                     ),
                   ),
                   _MenuItem(
@@ -211,7 +215,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     title: _tr('Measurement Requests', 'طلبات القياسات'),
                     trailing: Switch(
                       value: _notificationSettings['measurements'] ?? true,
-                      onChanged: (value) => _updateNotificationSetting('measurements', value),
+                      onChanged: (value) =>
+                          _updateNotificationSetting('measurements', value),
                     ),
                   ),
                   _MenuItem(
@@ -219,7 +224,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     title: _tr('Promotions', 'العروض'),
                     trailing: Switch(
                       value: _notificationSettings['promotions'] ?? false,
-                      onChanged: (value) => _updateNotificationSetting('promotions', value),
+                      onChanged: (value) =>
+                          _updateNotificationSetting('promotions', value),
                     ),
                   ),
                 ],
@@ -239,7 +245,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _MenuItem(
                     icon: Icons.contact_support,
                     title: _tr('Contact Us', 'اتصل بنا'),
-                    subtitle: _tr('Get in touch with our team', 'تواصل مع فريقنا'),
+                    subtitle:
+                        _tr('Get in touch with our team', 'تواصل مع فريقنا'),
                     onTap: () => _showContactInfo(),
                   ),
                   _MenuItem(
@@ -350,7 +357,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(_tr('Profile updated', 'تم تحديث الملف الشخصي')),
+                  content:
+                      Text(_tr('Profile updated', 'تم تحديث الملف الشخصي')),
                   backgroundColor: Colors.green,
                 ),
               );
@@ -391,7 +399,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _changeLanguage(String language) async {
     await StorageService.setLanguage(language);
     Navigator.of(context).pop();
-    
+
     // Restart the app to apply language changes
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
@@ -409,7 +417,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _showFavorites() {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(_tr('Favorites feature coming soon', 'ميزة المفضلة قريباً'))),
+      SnackBar(
+          content: Text(
+              _tr('Favorites feature coming soon', 'ميزة المفضلة قريباً'))),
     );
   }
 
@@ -425,33 +435,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Text(
                 _tr('Frequently Asked Questions', 'الأسئلة الشائعة'),
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               const SizedBox(height: 12),
-              
               _FAQItem(
                 question: _tr('How do I place an order?', 'كيف أضع طلباً؟'),
                 answer: _tr(
-                  'Browse tailors, select a service, provide measurements (if needed), and place your order.',
-                  'تصفح الخياطين، اختر خدمة، قدم القياسات (إذا لزم الأمر)، واضع طلبك.'
-                ),
+                    'Browse tailors, select a service, provide measurements (if needed), and place your order.',
+                    'تصفح الخياطين، اختر خدمة، قدم القياسات (إذا لزم الأمر)، واضع طلبك.'),
               ),
-              
               _FAQItem(
-                question: _tr('How do I save my measurements?', 'كيف أحفظ قياساتي؟'),
+                question:
+                    _tr('How do I save my measurements?', 'كيف أحفظ قياساتي؟'),
                 answer: _tr(
-                  'Go to Profile > My Measurements and add your body measurements.',
-                  'اذهب إلى الملف الشخصي > قياساتي وأضف قياسات جسمك.'
-                ),
+                    'Go to Profile > My Measurements and add your body measurements.',
+                    'اذهب إلى الملف الشخصي > قياساتي وأضف قياسات جسمك.'),
               ),
-              
               _FAQItem(
-                question: _tr('How can I track my order?', 'كيف يمكنني تتبع طلبي؟'),
+                question:
+                    _tr('How can I track my order?', 'كيف يمكنني تتبع طلبي؟'),
                 answer: _tr(
-                  'Check the Orders tab to see the status of all your orders.',
-                  'تحقق من تبويب الطلبات لرؤية حالة جميع طلباتك.'
-                ),
+                    'Check the Orders tab to see the status of all your orders.',
+                    'تحقق من تبويب الطلبات لرؤية حالة جميع طلباتك.'),
               ),
             ],
           ),
@@ -488,10 +494,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _ContactItem(
               icon: Icons.location_on,
               label: _tr('Address', 'العنوان'),
-              value: _tr(
-                'Dubai, United Arab Emirates',
-                'دبي، الإمارات العربية المتحدة'
-              ),
+              value: _tr('Dubai, United Arab Emirates',
+                  'دبي، الإمارات العربية المتحدة'),
             ),
           ],
         ),
@@ -510,15 +514,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       applicationName: 'Zayyan - زين',
       applicationVersion: '1.0.0',
-      applicationLegalese: _tr(
-        '© 2025 Zayyan. All rights reserved.',
-        '© 2025 زين. جميع الحقوق محفوظة.'
-      ),
+      applicationLegalese: _tr('© 2025 Zayyan. All rights reserved.',
+          '© 2025 زين. جميع الحقوق محفوظة.'),
       children: [
-        Text(_tr(
-          'Connecting you to UAE\'s finest traditional dress tailors.',
-          'نربطك بأفضل خياطي الأزياء التقليدية في الإمارات.'
-        )),
+        Text(_tr('Connecting you to UAE\'s finest traditional dress tailors.',
+            'نربطك بأفضل خياطي الأزياء التقليدية في الإمارات.')),
       ],
     );
   }
@@ -528,10 +528,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(_tr('Sign Out', 'تسجيل الخروج')),
-        content: Text(_tr(
-          'Are you sure you want to sign out?',
-          'هل أنت متأكد من تسجيل الخروج؟'
-        )),
+        content: Text(_tr('Are you sure you want to sign out?',
+            'هل أنت متأكد من تسجيل الخروج؟')),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -584,7 +582,7 @@ class _MenuSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -645,7 +643,7 @@ class _FAQItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(
@@ -684,7 +682,7 @@ class _ContactItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(

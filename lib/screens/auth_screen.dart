@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zayyan/models/models.dart';
+import 'package:zayyan/screens/home/home_screen.dart';
 import 'package:zayyan/services/storage_service.dart';
 import 'package:zayyan/screens/main_navigation.dart';
 
@@ -77,7 +78,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
     if (mounted) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const MainNavigation()),
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
     }
   }
@@ -103,7 +104,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
     if (mounted) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const MainNavigation()),
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
     }
   }
@@ -114,7 +115,7 @@ class _AuthScreenState extends State<AuthScreen> {
     
     if (mounted) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const MainNavigation()),
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
     }
   }

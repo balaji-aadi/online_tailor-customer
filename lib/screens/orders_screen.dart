@@ -33,7 +33,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
   List<Order> get _filteredOrders {
     if (_selectedFilter == null) return _orders;
-    return _orders.where((order) => order.serviceType == _selectedFilter).toList();
+    return _orders
+        .where((order) => order.serviceType == _selectedFilter)
+        .toList();
   }
 
   @override
@@ -46,7 +48,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(_tr('My Orders', 'طلباتي')),
-          centerTitle: true,
+          centerTitle: false,
         ),
         body: Column(
           children: [
@@ -76,15 +78,16 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     ),
                     const SizedBox(width: 8),
                     ...ServiceType.values.map((type) => Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: FilterChip(
-                        label: Text(_getServiceTypeLabel(type)),
-                        selected: _selectedFilter == type,
-                        onSelected: (selected) {
-                          setState(() => _selectedFilter = selected ? type : null);
-                        },
-                      ),
-                    )),
+                          padding: const EdgeInsets.only(right: 8),
+                          child: FilterChip(
+                            label: Text(_getServiceTypeLabel(type)),
+                            selected: _selectedFilter == type,
+                            onSelected: (selected) {
+                              setState(() =>
+                                  _selectedFilter = selected ? type : null);
+                            },
+                          ),
+                        )),
                   ],
                 ),
               ),
@@ -109,10 +112,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            _tr(
-                              'Your orders will appear here',
-                              'ستظهر طلباتك هنا'
-                            ),
+                            _tr('Your orders will appear here',
+                                'ستظهر طلباتك هنا'),
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: theme.colorScheme.outline,
                             ),
@@ -178,8 +179,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                       child: Text(
                         _tr('Order Details', 'تفاصيل الطلب'),
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                     ),
                     IconButton(
@@ -239,7 +240,9 @@ class _OrderCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      language == 'ar' ? order.serviceTitleAr : order.serviceTitle,
+                      language == 'ar'
+                          ? order.serviceTitleAr
+                          : order.serviceTitle,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -315,7 +318,7 @@ class _OrderCard extends StatelessWidget {
                       ),
                       if (order.estimatedDelivery != null)
                         Text(
-                          language == 'ar' 
+                          language == 'ar'
                               ? 'التسليم: ${_formatDate(order.estimatedDelivery!)}'
                               : 'Delivery: ${_formatDate(order.estimatedDelivery!)}',
                           style: theme.textTheme.bodySmall?.copyWith(
@@ -350,7 +353,7 @@ class _StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     Color backgroundColor;
     Color textColor;
     String label;
@@ -430,18 +433,20 @@ class _OrderDetailsContent extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                
                 _InfoRow(
                   label: language == 'ar' ? 'رقم الطلب' : 'Order ID',
                   value: '#${order.id.substring(order.id.length - 8)}',
                 ),
                 _InfoRow(
                   label: language == 'ar' ? 'الخدمة' : 'Service',
-                  value: language == 'ar' ? order.serviceTitleAr : order.serviceTitle,
+                  value: language == 'ar'
+                      ? order.serviceTitleAr
+                      : order.serviceTitle,
                 ),
                 _InfoRow(
                   label: language == 'ar' ? 'الخياط' : 'Tailor',
-                  value: language == 'ar' ? order.tailorNameAr : order.tailorName,
+                  value:
+                      language == 'ar' ? order.tailorNameAr : order.tailorName,
                 ),
                 _InfoRow(
                   label: language == 'ar' ? 'المبلغ الإجمالي' : 'Total Amount',
@@ -453,7 +458,9 @@ class _OrderDetailsContent extends StatelessWidget {
                 ),
                 if (order.estimatedDelivery != null)
                   _InfoRow(
-                    label: language == 'ar' ? 'التسليم المتوقع' : 'Estimated Delivery',
+                    label: language == 'ar'
+                        ? 'التسليم المتوقع'
+                        : 'Estimated Delivery',
                     value: _formatDate(order.estimatedDelivery!),
                   ),
               ],
@@ -472,7 +479,9 @@ class _OrderDetailsContent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    language == 'ar' ? 'المتطلبات الخاصة' : 'Special Requirements',
+                    language == 'ar'
+                        ? 'المتطلبات الخاصة'
+                        : 'Special Requirements',
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -531,45 +540,46 @@ class _OrderDetailsContent extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  
                   ...order.statusUpdates.reversed.map((update) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          margin: const EdgeInsets.only(top: 6),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.primary,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                language == 'ar' ? update.messageAr : update.message,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                ),
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 8,
+                              height: 8,
+                              margin: const EdgeInsets.only(top: 6),
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.primary,
+                                shape: BoxShape.circle,
                               ),
-                              const SizedBox(height: 2),
-                              Text(
-                                _formatDateTime(update.timestamp),
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.outline,
-                                ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    language == 'ar'
+                                        ? update.messageAr
+                                        : update.message,
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    _formatDateTime(update.timestamp),
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.outline,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  )),
+                      )),
                 ],
               ),
             ),
@@ -602,7 +612,7 @@ class _InfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(

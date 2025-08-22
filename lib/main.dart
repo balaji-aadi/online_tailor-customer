@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:zayyan/screens/home/home_screen.dart';
 import 'package:zayyan/theme.dart';
 import 'package:zayyan/services/storage_service.dart';
 import 'package:zayyan/screens/auth_screen.dart';
@@ -60,7 +61,7 @@ class _ZayyanAppState extends State<ZayyanApp> {
           }
           
           if (snapshot.data == true) {
-            return const MainNavigation();
+            return const HomeScreen();
           }
           
           return AuthScreen(onLanguageChanged: (language) {
