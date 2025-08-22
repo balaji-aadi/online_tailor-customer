@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:zayyan/models/models.dart';
 import 'package:zayyan/screens/home/home_screen.dart';
 import 'package:zayyan/services/storage_service.dart';
-import 'package:zayyan/screens/main_navigation.dart';
+
 
 class AuthScreen extends StatefulWidget {
   final Function(String) onLanguageChanged;
