@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:zayyan/constants/color_constant.dart';
 import 'package:zayyan/models/models.dart';
 import 'package:zayyan/data/sample_data.dart';
 import 'package:zayyan/services/storage_service.dart';
 import 'package:zayyan/screens/service_detail_screen.dart';
+
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
@@ -59,154 +61,170 @@ class _HomePageScreenState extends State<HomePageScreen> {
     final theme = Theme.of(context);
     final isRTL = _selectedLanguage == 'ar';
 
-    return Column(
-      children: [
-        // Search and Filter Section
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              // Search Bar
-              TextField(
-                controller: _searchController,
-                textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
-                decoration: InputDecoration(
-                  hintText: _tr('Search tailors, services...',
-                      'البحث عن الخياطين، الخدمات...'),
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  filled: true,
-                  fillColor: theme.colorScheme.background,
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: ColorConstants.backgroundGradient,
+      ),
+      child: Column(
+        children: [
+          // 🔍 Search and Filter Section
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: ColorConstants.primaryGradient,
+              boxShadow: [
+                BoxShadow(
+                  color: ColorConstants.black.withOpacity(0.1),
+                  blurRadius: 6,
+                  offset: const Offset(0, 3),
                 ),
-                onChanged: (value) => _filterTailors(),
+              ],
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
               ),
-
-              const SizedBox(height: 12),
-
-              // Service Type Filter Chips
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    FilterChip(
-                      label: Text(_tr('All', 'الكل')),
-                      selected: _selectedServiceType == null,
-                      onSelected: (selected) {
-                        setState(() => _selectedServiceType = null);
-                        _filterTailors();
-                      },
+            ),
+            child: Column(
+              children: [
+                // Search Bar
+                TextField(
+                  controller: _searchController,
+                  textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+                  decoration: InputDecoration(
+                    hintText: _tr('Search tailors, services...',
+                        'البحث عن الخياطين، الخدمات...'),
+                    prefixIcon: const Icon(Icons.search,
+                        color: ColorConstants.deepNavy),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
                     ),
-                    const SizedBox(width: 8),
-                    ...ServiceType.values.map((type) => Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: FilterChip(
-                            label: Text(_getServiceTypeLabel(type)),
-                            selected: _selectedServiceType == type,
-                            onSelected: (selected) {
-                              setState(() {
-                                _selectedServiceType = selected ? type : null;
-                              });
-                              _filterTailors();
+                    filled: true,
+                    fillColor: ColorConstants.softIvory,
+                  ),
+                  onChanged: (value) => _filterTailors(),
+                ),
+
+                const SizedBox(height: 12),
+
+                // Service Type Filter Chips
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      FilterChip(
+                        label: Text(_tr('All', 'الكل')),
+                        selected: _selectedServiceType == null,
+                        selectedColor:
+                            ColorConstants.accentTeal.withOpacity(0.2),
+                        checkmarkColor: ColorConstants.accentTeal,
+                        onSelected: (selected) {
+                          setState(() => _selectedServiceType = null);
+                          _filterTailors();
+                        },
+                      ),
+                      const SizedBox(width: 8),
+                      ...ServiceType.values.map((type) => Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: FilterChip(
+                              label: Text(_getServiceTypeLabel(type)),
+                              selected: _selectedServiceType == type,
+                              selectedColor:
+                                  ColorConstants.primaryGold.withOpacity(0.25),
+                              checkmarkColor: ColorConstants.primaryGold,
+                              onSelected: (selected) {
+                                setState(() {
+                                  _selectedServiceType = selected ? type : null;
+                                });
+                                _filterTailors();
+                              },
+                            ),
+                          )),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // 📋 Content
+          Expanded(
+            child: _filteredTailors.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.search_off,
+                            size: 64, color: ColorConstants.grey),
+                        const SizedBox(height: 16),
+                        Text(
+                          _tr('No tailors found', 'لم يتم العثور على خياطين'),
+                          style: theme.textTheme.titleMedium
+                              ?.copyWith(color: ColorConstants.deepNavy),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          _tr('Try adjusting your search or filters',
+                              'جرب تعديل البحث أو المرشحات'),
+                          style: theme.textTheme.bodyMedium
+                              ?.copyWith(color: ColorConstants.grey),
+                        ),
+                      ],
+                    ),
+                  )
+                : ListView(
+                    padding: const EdgeInsets.all(16),
+                    children: [
+                      // Featured Section
+                      if (_searchController.text.isEmpty &&
+                          _selectedServiceType == null) ...[
+                        Text(
+                          _tr('Featured Tailors', 'خياطون مميزون'),
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: ColorConstants.deepNavy,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        SizedBox(
+                          height: 220,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: _filteredTailors.take(3).length,
+                            itemBuilder: (context, index) {
+                              final tailor = _filteredTailors[index];
+                              return _FeaturedTailorCard(
+                                tailor: tailor,
+                                language: _selectedLanguage,
+                              );
                             },
                           ),
-                        )),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          _tr('All Tailors', 'جميع الخياطين'),
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: ColorConstants.deepNavy,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                      ],
 
-        // Content
-        Expanded(
-          child: _filteredTailors.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.search_off,
-                        size: 64,
-                        color: theme.colorScheme.outline,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        _tr('No tailors found', 'لم يتم العثور على خياطين'),
-                        style: theme.textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        _tr('Try adjusting your search or filters',
-                            'جرب تعديل البحث أو المرشحات'),
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.outline,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              : ListView(
-                  padding: const EdgeInsets.all(16),
-                  children: [
-                    // Featured Section
-                    if (_searchController.text.isEmpty &&
-                        _selectedServiceType == null) ...[
-                      Text(
-                        _tr('Featured Tailors', 'خياطون مميزون'),
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        height: 220,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: _filteredTailors.take(3).length,
-                          itemBuilder: (context, index) {
-                            final tailor = _filteredTailors[index];
-                            return _FeaturedTailorCard(
+                      // Tailors Grid
+                      ...(_filteredTailors.map((tailor) => Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: _TailorCard(
                               tailor: tailor,
                               language: _selectedLanguage,
-                            );
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      Text(
-                        _tr('All Tailors', 'جميع الخياطين'),
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
+                              onTap: () => _showTailorServices(tailor),
+                            ),
+                          ))),
                     ],
-
-                    // Tailors Grid
-                    ...(_filteredTailors.map((tailor) => Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: _TailorCard(
-                            tailor: tailor,
-                            language: _selectedLanguage,
-                            onTap: () => _showTailorServices(tailor),
-                          ),
-                        ))),
-                  ],
-                ),
-        ),
-      ],
+                  ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -415,7 +433,7 @@ class _TailorCard extends StatelessWidget {
       onTap: onTap,
       child: Card(
         child: ListTile(
-         leading: CircleAvatar(
+          leading: CircleAvatar(
             backgroundColor: Colors.grey[300],
             child: const Icon(
               Icons.person,
@@ -449,8 +467,8 @@ class _ServiceCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
-        title: Text(service.title), 
-        subtitle: Text(service.description), 
+        title: Text(service.title),
+        subtitle: Text(service.description),
         trailing: Icon(Icons.chevron_right),
         onTap: onTap,
       ),

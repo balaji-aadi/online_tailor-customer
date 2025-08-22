@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:zayyan/constants/color_constant.dart';
 import 'package:zayyan/screens/home/home_page_screen.dart';
 import 'package:zayyan/services/storage_service.dart';
 import 'package:zayyan/screens/order/orders_screen.dart';
 import 'package:zayyan/screens/message/messages_screen.dart';
 import 'package:zayyan/screens/profile/profile_screen.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -32,13 +34,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _getCurrentScreen() {
     switch (_selectedIndex) {
       case 0:
-        // Wrap HomePageScreen in Scaffold with AppBar
         return Scaffold(
           appBar: AppBar(
             title: Text(_tr('Home', 'الرئيسية')),
-            centerTitle: false,
-            elevation: 1,
-            surfaceTintColor: Theme.of(context).colorScheme.background,
+            backgroundColor: ColorConstants.deepNavy,
+            foregroundColor: ColorConstants.warmIvory,
+            elevation: 0,
           ),
           body: const HomePageScreen(),
         );
@@ -60,32 +61,41 @@ class _HomeScreenState extends State<HomeScreen> {
     return Directionality(
       textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
-        // Remove body from here — it's now handled inside _getCurrentScreen()
         body: _getCurrentScreen(),
         bottomNavigationBar: NavigationBar(
+          backgroundColor: ColorConstants.warmIvory,
           selectedIndex: _selectedIndex,
+          indicatorColor: ColorConstants.primaryGold.withOpacity(0.2),
           onDestinationSelected: (index) {
             setState(() => _selectedIndex = index);
           },
           destinations: [
             NavigationDestination(
-              icon: const Icon(Icons.home_outlined),
-              selectedIcon: const Icon(Icons.home),
+              icon: const Icon(Icons.home_outlined,
+                  color: ColorConstants.deepNavy),
+              selectedIcon:
+                  const Icon(Icons.home, color: ColorConstants.primaryGold),
               label: _tr('Home', 'الرئيسية'),
             ),
             NavigationDestination(
-              icon: const Icon(Icons.shopping_bag_outlined),
-              selectedIcon: const Icon(Icons.shopping_bag),
+              icon: const Icon(Icons.shopping_bag_outlined,
+                  color: ColorConstants.deepNavy),
+              selectedIcon: const Icon(Icons.shopping_bag,
+                  color: ColorConstants.primaryGold),
               label: _tr('Orders', 'الطلبات'),
             ),
             NavigationDestination(
-              icon: const Icon(Icons.chat_outlined),
-              selectedIcon: const Icon(Icons.chat),
+              icon: const Icon(Icons.chat_outlined,
+                  color: ColorConstants.deepNavy),
+              selectedIcon:
+                  const Icon(Icons.chat, color: ColorConstants.primaryGold),
               label: _tr('Messages', 'الرسائل'),
             ),
             NavigationDestination(
-              icon: const Icon(Icons.person_outlined),
-              selectedIcon: const Icon(Icons.person),
+              icon: const Icon(Icons.person_outline,
+                  color: ColorConstants.deepNavy),
+              selectedIcon:
+                  const Icon(Icons.person, color: ColorConstants.primaryGold),
               label: _tr('Profile', 'الملف الشخصي'),
             ),
           ],
