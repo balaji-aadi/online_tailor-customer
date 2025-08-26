@@ -54,7 +54,8 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
       begin: const Offset(0, 0.3),
       end: Offset.zero,
     ).animate(
-        CurvedAnimation(parent: _slideController!, curve: Curves.elasticOut));
+      CurvedAnimation(parent: _slideController!, curve: Curves.elasticOut),
+    );
 
     _fadeController?.forward();
     _slideController?.forward();
@@ -89,7 +90,6 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   }
 
   Future<void> _login() async {
-    // Simulate login
     final user = User(
       id: 'user_${DateTime.now().millisecondsSinceEpoch}',
       name: _tr('Customer', 'العميل'),
@@ -114,8 +114,9 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
     if (_otpController.text.isEmpty || _otpController.text.length < 4) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text(
-                _tr('Please enter valid OTP', 'يرجى إدخال رمز التحقق الصحيح'))),
+          content: Text(
+              _tr('Please enter valid OTP', 'يرجى إدخال رمز التحقق الصحيح')),
+        ),
       );
       return;
     }
@@ -154,15 +155,20 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
     final theme = Theme.of(context);
     final isRTL = _selectedLanguage == 'ar';
 
+    // 🔽 Dynamic spacing: compact in register mode
+    final double _fieldSpacing = !_isLogin ? 16.0 : 24.0;
+    final double _sectionSpacing = !_isLogin ? 20.0 : 28.0;
+
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              theme.colorScheme.primary.withOpacity(0.1),
-              theme.colorScheme.secondary.withOpacity(0.05),
+              theme.colorScheme.primary.withOpacity(0.12),
+              theme.colorScheme.secondary.withOpacity(0.06),
               Colors.white,
             ],
           ),
@@ -171,15 +177,14 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
           child: Directionality(
             textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(24, 20, 24, 40),
               child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(height: 20),
-
-                    // Language Selection with enhanced styling
+                    // Language Selector
                     FadeTransition(
                       opacity:
                           _fadeAnimation ?? const AlwaysStoppedAnimation(1.0),
@@ -209,15 +214,15 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                             segments: const [
                               ButtonSegment<String>(
                                 value: 'en',
-                                label: Text('English',
+                                label: Text('EN',
                                     style:
-                                        TextStyle(fontWeight: FontWeight.w600)),
+                                        TextStyle(fontWeight: FontWeight.bold)),
                               ),
                               ButtonSegment<String>(
                                 value: 'ar',
-                                label: Text('العربية',
+                                label: Text('عربي',
                                     style:
-                                        TextStyle(fontWeight: FontWeight.w600)),
+                                        TextStyle(fontWeight: FontWeight.bold)),
                               ),
                             ],
                             selected: {_selectedLanguage},
@@ -231,9 +236,9 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                       ),
                     ),
 
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 32),
 
-                    // App Logo and Title with animations
+                    // Logo & Branding
                     SlideTransition(
                       position: _slideAnimation ??
                           const AlwaysStoppedAnimation(Offset.zero),
@@ -243,7 +248,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                         child: Column(
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(20),
+                              padding: const EdgeInsets.all(24),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 gradient: LinearGradient(
@@ -255,15 +260,15 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                 boxShadow: [
                                   BoxShadow(
                                     color: theme.colorScheme.primary
-                                        .withOpacity(0.3),
-                                    blurRadius: 20,
+                                        .withOpacity(0.4),
+                                    blurRadius: 24,
                                     offset: const Offset(0, 8),
                                   ),
                                 ],
                               ),
-                              child: const Icon(
-                                Icons.content_cut,
-                                size: 50,
+                              child: Icon(
+                                Icons.cut, // ✅ Real Material icon for tailoring
+                                size: 56,
                                 color: Colors.white,
                               ),
                             ),
@@ -276,18 +281,19 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                 ],
                               ).createShader(bounds),
                               child: Text(
-                                'Zayyan - زين',
-                                style: theme.textTheme.displaySmall?.copyWith(
-                                  color: Colors.white,
+                                'Khyate - خياطة',
+                                style: theme.textTheme.headlineMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
+                                  letterSpacing: 0.5,
                                 ),
-                                textAlign: TextAlign.center,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: 6),
                             Text(
-                              _tr('UAE Traditional Dress Tailors',
-                                  'خياطو الأزياء التقليدية الإماراتية'),
+                              _tr(
+                                'UAE Heritage Tailoring',
+                                'خياطة تراث الإمارات',
+                              ),
                               style: theme.textTheme.bodyLarge?.copyWith(
                                 color: Colors.grey[600],
                                 fontWeight: FontWeight.w500,
@@ -301,7 +307,36 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
 
                     const SizedBox(height: 40),
 
-                    // Enhanced Auth Form
+                    // Divider with Ornament
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              height: 1,
+                              color: Colors.grey[300],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: Icon(
+                              Icons.design_services_outlined,
+                              size: 18,
+                              color: theme.colorScheme.primary.withOpacity(0.7),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              height: 1,
+                              color: Colors.grey[300],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // Auth Form Card
                     SlideTransition(
                       position: _slideAnimation ??
                           const AlwaysStoppedAnimation(Offset.zero),
@@ -312,16 +347,16 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.1),
-                              blurRadius: 20,
-                              offset: const Offset(0, 8),
+                              blurRadius: 24,
+                              offset: const Offset(0, 12),
                             ),
                           ],
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(24),
+                          padding: const EdgeInsets.all(28),
                           child: Column(
                             children: [
-                              // Enhanced Toggle Login/Register
+                              // Login / Register Tabs
                               Container(
                                 padding: const EdgeInsets.all(4),
                                 decoration: BoxDecoration(
@@ -338,7 +373,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                         }),
                                         child: AnimatedContainer(
                                           duration:
-                                              const Duration(milliseconds: 200),
+                                              const Duration(milliseconds: 250),
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 12),
                                           decoration: BoxDecoration(
@@ -369,7 +404,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                         }),
                                         child: AnimatedContainer(
                                           duration:
-                                              const Duration(milliseconds: 200),
+                                              const Duration(milliseconds: 250),
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 12),
                                           decoration: BoxDecoration(
@@ -396,14 +431,13 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                 ),
                               ),
 
-                              const SizedBox(height: 24),
+                              SizedBox(height: _sectionSpacing),
 
-                              // Enhanced Form Fields
+                              // Form Fields (Compact in Register Mode)
                               AnimatedContainer(
                                 duration: const Duration(milliseconds: 300),
                                 child: Column(
                                   children: [
-                                    // Name Field (Register only)
                                     if (!_isLogin)
                                       _buildEnhancedTextField(
                                         controller: _nameController,
@@ -413,18 +447,15 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                         isRTL: isRTL,
                                         validator: (value) {
                                           if (!_isLogin &&
-                                              (value == null ||
-                                                  value.isEmpty)) {
+                                              (value?.isEmpty ?? true)) {
                                             return _tr('Please enter your name',
                                                 'يرجى إدخال الاسم');
                                           }
                                           return null;
                                         },
                                       ),
-
-                                    if (!_isLogin) const SizedBox(height: 16),
-
-                                    // Email Field
+                                    if (!_isLogin)
+                                      SizedBox(height: _fieldSpacing),
                                     _buildEnhancedTextField(
                                       controller: _emailController,
                                       labelText:
@@ -432,59 +463,50 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                       prefixIcon: Icons.email_outlined,
                                       keyboardType: TextInputType.emailAddress,
                                       validator: (value) {
-                                        if (value == null || value.isEmpty) {
+                                        if (value?.isEmpty ?? true) {
                                           return _tr('Please enter email',
-                                              'يرجى إدخال البريد الإلكتروني');
+                                              'يرجى إدخال البريد');
                                         }
-                                        if (!value.contains('@')) {
-                                          return _tr('Please enter valid email',
-                                              'يرجى إدخال بريد إلكتروني صحيح');
+                                        if (!value!.contains('@')) {
+                                          return _tr('Invalid email',
+                                              'بريد إلكتروني غير صحيح');
                                         }
                                         return null;
                                       },
                                     ),
-
-                                    const SizedBox(height: 16),
-
-                                    // Phone Field (Register only)
+                                    SizedBox(height: _fieldSpacing),
                                     if (!_isLogin)
                                       _buildEnhancedTextField(
                                         controller: _phoneController,
-                                        labelText:
-                                            _tr('Phone Number', 'رقم الهاتف'),
+                                        labelText: _tr('Phone', 'رقم الهاتف'),
                                         prefixIcon: Icons.phone_outlined,
                                         keyboardType: TextInputType.phone,
-                                        hintText: '+971501234567',
+                                        hintText: '+97150XXXXXXX',
                                         validator: (value) {
                                           if (!_isLogin &&
-                                              (value == null ||
-                                                  value.isEmpty)) {
-                                            return _tr(
-                                                'Please enter phone number',
-                                                'يرجى إدخال رقم الهاتف');
+                                              (value?.isEmpty ?? true)) {
+                                            return _tr('Phone required',
+                                                'رقم الهاتف مطلوب');
                                           }
                                           return null;
                                         },
                                       ),
-
-                                    if (!_isLogin) const SizedBox(height: 16),
-
-                                    // OTP Field (Register - after phone)
+                                    if (!_isLogin)
+                                      SizedBox(height: _fieldSpacing),
                                     if (!_isLogin && _showOtpField)
                                       Column(
                                         children: [
                                           _buildEnhancedTextField(
                                             controller: _otpController,
-                                            labelText: _tr('Verification Code',
-                                                'رمز التحقق'),
-                                            prefixIcon: Icons.security_outlined,
+                                            labelText: _tr('Code', 'الرمز'),
+                                            prefixIcon: Icons.sms_outlined,
                                             keyboardType: TextInputType.number,
                                             maxLength: 6,
                                             hintText: '123456',
                                           ),
                                           const SizedBox(height: 8),
                                           Container(
-                                            padding: const EdgeInsets.all(12),
+                                            padding: const EdgeInsets.all(10),
                                             decoration: BoxDecoration(
                                               color: theme.colorScheme.primary
                                                   .withOpacity(0.1),
@@ -492,8 +514,10 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                                   BorderRadius.circular(8),
                                             ),
                                             child: Text(
-                                              _tr('Enter the 6-digit code sent to your phone',
-                                                  'أدخل الرمز المكون من 6 أرقام المرسل إلى هاتفك'),
+                                              _tr(
+                                                'Enter 6-digit code sent to your phone',
+                                                'أدخل الرمز المرسل إلى هاتفك',
+                                              ),
                                               style: theme.textTheme.bodySmall
                                                   ?.copyWith(
                                                 color:
@@ -503,11 +527,9 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                               textAlign: TextAlign.center,
                                             ),
                                           ),
-                                          const SizedBox(height: 16),
+                                          SizedBox(height: _fieldSpacing),
                                         ],
                                       ),
-
-                                    // Password Field (Login only, or Register after OTP)
                                     if (_isLogin ||
                                         (!_isLogin && _showOtpField))
                                       _buildEnhancedTextField(
@@ -528,14 +550,13 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                                   !_obscurePassword),
                                         ),
                                         validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return _tr('Please enter password',
-                                                'يرجى إدخال كلمة المرور');
+                                          if (value?.isEmpty ?? true) {
+                                            return _tr('Password required',
+                                                'كلمة المرور مطلوبة');
                                           }
-                                          if (value.length < 6) {
-                                            return _tr(
-                                                'Password must be at least 6 characters',
-                                                'كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+                                          if (value!.length < 6) {
+                                            return _tr('Min 6 characters',
+                                                'الحد الأدنى 6 أحرف');
                                           }
                                           return null;
                                         },
@@ -544,14 +565,13 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                 ),
                               ),
 
-                              const SizedBox(height: 24),
+                              SizedBox(height: _sectionSpacing),
 
-                              // Enhanced Submit Button
+                              // Submit Button
                               Container(
-                                width: double.infinity,
-                                height: 52,
+                                height: 40,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(14),
                                   gradient: LinearGradient(
                                     colors: [
                                       theme.colorScheme.primary,
@@ -561,9 +581,9 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                   boxShadow: [
                                     BoxShadow(
                                       color: theme.colorScheme.primary
-                                          .withOpacity(0.3),
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 4),
+                                          .withOpacity(0.4),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 6),
                                     ),
                                   ],
                                 ),
@@ -573,29 +593,30 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                     backgroundColor: Colors.transparent,
                                     shadowColor: Colors.transparent,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.circular(14),
                                     ),
+                                    elevation: 0,
                                   ),
                                   child: _isLoading
                                       ? const SizedBox(
-                                          height: 20,
-                                          width: 20,
+                                          width: 24,
+                                          height: 24,
                                           child: CircularProgressIndicator(
-                                            strokeWidth: 2,
+                                            strokeWidth: 2.5,
                                             color: Colors.white,
                                           ),
                                         )
                                       : Text(
                                           _isLogin
-                                              ? _tr('Login', 'تسجيل الدخول')
+                                              ? _tr('Sign In', 'تسجيل الدخول')
                                               : _showOtpField
-                                                  ? _tr('Verify & Complete',
-                                                      'تحقق وإكمال')
+                                                  ? _tr('Verify & Continue',
+                                                      'التحقق')
                                                   : _tr('Send Code',
                                                       'إرسال الرمز'),
                                           style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold,
                                             color: Colors.white,
                                           ),
                                         ),
@@ -607,34 +628,39 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                       ),
                     ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 24),
 
-                    // Enhanced Guest Mode Button
+                    // Guest Mode
                     Container(
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey[300]!),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(14),
                         color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 6,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
                       child: TextButton(
                         onPressed: _continueAsGuest,
                         style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          padding: const EdgeInsets.symmetric(vertical: 5),
                         ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
-                              Icons.person_outline,
-                              color: theme.colorScheme.secondary,
-                              size: 20,
-                            ),
+                            Icon(Icons.person_outline,
+                                color: theme.colorScheme.secondary, size: 20),
                             const SizedBox(width: 8),
                             Text(
                               _tr('Continue as Guest', 'المتابعة كضيف'),
                               style: TextStyle(
                                 color: theme.colorScheme.secondary,
                                 fontWeight: FontWeight.w600,
+                                fontSize: 15,
                               ),
                             ),
                           ],
@@ -642,7 +668,26 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                       ),
                     ),
 
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 16),
+
+                    // Footer
+                    Text(
+                      _tr('Crafted with care in the UAE',
+                          'مصنوعة بعناية في الإمارات'),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: Colors.grey[500],
+                        fontStyle: FontStyle.italic,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'v1.0.0',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: Colors.grey[400],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -672,9 +717,9 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+            color: Colors.grey.withOpacity(0.12),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -714,6 +759,8 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
           fillColor: Colors.white,
           labelStyle: TextStyle(color: Colors.grey[600]),
           counterText: '',
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
         ),
         validator: validator,
       ),
