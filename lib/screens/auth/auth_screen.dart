@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:khyate_tailor_app/constants/color_constant.dart';
 import 'package:khyate_tailor_app/models/models.dart';
 import 'package:khyate_tailor_app/screens/home/home_screen.dart';
 import 'package:khyate_tailor_app/services/storage_service.dart';
 
-
 class AuthScreen extends StatefulWidget {
   final Function(String) onLanguageChanged;
-
   const AuthScreen({super.key, required this.onLanguageChanged});
 
   @override
@@ -76,7 +75,6 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
 
     setState(() => _isLoading = true);
 
-    // Simulate API call delay
     await Future.delayed(const Duration(seconds: 1));
 
     if (_isLogin) {
@@ -161,22 +159,18 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isRTL = _selectedLanguage == 'ar';
-
-    // Dynamic spacing: compact in register mode
     final double _fieldSpacing = !_isLogin ? 16.0 : 24.0;
     final double _sectionSpacing = !_isLogin ? 20.0 : 28.0;
-
     final colorScheme = theme.colorScheme;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark.copyWith(
-        statusBarColor: Colors.transparent,
-      ),
+      value: SystemUiOverlayStyle.dark
+          .copyWith(statusBarColor: Colors.transparent),
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Stack(
           children: [
-            // Subtle background ornaments for depth
+            // Background Blobs
             Positioned(
               top: -60,
               left: -40,
@@ -199,6 +193,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                 ],
               ),
             ),
+
             SafeArea(
               child: Directionality(
                 textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
@@ -254,21 +249,23 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                         segments: [
                                           ButtonSegment<String>(
                                             value: 'en',
-                                            label: Text('EN',
-                                                style: theme
-                                                    .textTheme.labelLarge
-                                                    ?.copyWith(
-                                                        fontWeight:
-                                                            FontWeight.w700)),
+                                            label: Text(
+                                              'EN',
+                                              style: theme.textTheme.labelLarge
+                                                  ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w700),
+                                            ),
                                           ),
                                           ButtonSegment<String>(
                                             value: 'ar',
-                                            label: Text('عربي',
-                                                style: theme
-                                                    .textTheme.labelLarge
-                                                    ?.copyWith(
-                                                        fontWeight:
-                                                            FontWeight.w700)),
+                                            label: Text(
+                                              'عربي',
+                                              style: theme.textTheme.labelLarge
+                                                  ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w700),
+                                            ),
                                           ),
                                         ],
                                         selected: {_selectedLanguage},
@@ -286,7 +283,6 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                 ),
                               ),
                             ),
-
                             const SizedBox(height: 28),
 
                             // Logo & Branding
@@ -298,29 +294,15 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                     const AlwaysStoppedAnimation(1.0),
                                 child: Column(
                                   children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(24),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            colorScheme.primary,
-                                            colorScheme.secondary
-                                          ],
-                                        ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: colorScheme.primary
-                                                .withOpacity(0.35),
-                                            blurRadius: 28,
-                                            offset: const Offset(0, 10),
-                                          ),
-                                        ],
-                                      ),
-                                      child: const Icon(Icons.cut,
-                                          size: 56, color: Colors.white),
+                                    // Logo (no container around it)
+                                    Image.asset(
+                                      'assets/images/khyate_logo.png',
+                                      height: 72,
+                                      fit: BoxFit.contain,
                                     ),
-                                    const SizedBox(height: 16),
+                                    const SizedBox(height: 12),
+
+                                    // Brand Name with Gradient
                                     ShaderMask(
                                       shaderCallback: (bounds) =>
                                           LinearGradient(
@@ -329,17 +311,10 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                           colorScheme.secondary
                                         ],
                                       ).createShader(bounds),
-                                      child: Text(
-                                        'Khyate - خياطة',
-                                        textAlign: TextAlign.center,
-                                        style: theme.textTheme.headlineMedium
-                                            ?.copyWith(
-                                          fontWeight: FontWeight.w800,
-                                          letterSpacing: 0.4,
-                                        ),
-                                      ),
                                     ),
                                     const SizedBox(height: 6),
+
+                                    // Tagline
                                     Text(
                                       _tr('UAE Heritage Tailoring',
                                           'خياطة تراث الإمارات'),
@@ -348,16 +323,16 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                           theme.textTheme.titleMedium?.copyWith(
                                         color: Colors.grey[700],
                                         fontWeight: FontWeight.w600,
+                                        fontSize: 16,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
                             ),
-
                             const SizedBox(height: 36),
 
-                            // Divider with Ornament
+                            // Divider with Icon
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Row(
@@ -423,40 +398,43 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                           child: Row(
                                             children: [
                                               Expanded(
-                                                  child: _Segment(
-                                                active: _isLogin,
-                                                label: _tr(
-                                                    'Login', 'تسجيل الدخول'),
-                                                onTap: () {
-                                                  setState(() {
-                                                    _isLogin = true;
-                                                    _showOtpField = false;
-                                                  });
-                                                  HapticFeedback.lightImpact();
-                                                },
-                                              )),
+                                                child: _Segment(
+                                                  active: _isLogin,
+                                                  label: _tr(
+                                                      'Login', 'تسجيل الدخول'),
+                                                  onTap: () {
+                                                    setState(() {
+                                                      _isLogin = true;
+                                                      _showOtpField = false;
+                                                    });
+                                                    HapticFeedback
+                                                        .lightImpact();
+                                                  },
+                                                ),
+                                              ),
                                               const SizedBox(width: 6),
                                               Expanded(
-                                                  child: _Segment(
-                                                active: !_isLogin,
-                                                label: _tr(
-                                                    'Register', 'تسجيل جديد'),
-                                                onTap: () {
-                                                  setState(() {
-                                                    _isLogin = false;
-                                                    _showOtpField = false;
-                                                  });
-                                                  HapticFeedback.lightImpact();
-                                                },
-                                              )),
+                                                child: _Segment(
+                                                  active: !_isLogin,
+                                                  label: _tr(
+                                                      'Register', 'تسجيل جديد'),
+                                                  onTap: () {
+                                                    setState(() {
+                                                      _isLogin = false;
+                                                      _showOtpField = false;
+                                                    });
+                                                    HapticFeedback
+                                                        .lightImpact();
+                                                  },
+                                                ),
+                                              ),
                                             ],
                                           ),
                                         ),
                                       ),
-
                                       SizedBox(height: _sectionSpacing),
 
-                                      // Form Fields (Compact in Register Mode)
+                                      // Form Fields
                                       AnimatedSwitcher(
                                         duration:
                                             const Duration(milliseconds: 250),
@@ -647,13 +625,11 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                           ],
                                         ),
                                       ),
-
                                       SizedBox(height: _sectionSpacing),
 
                                       // Submit Button
                                       SizedBox(
                                         height: 52,
-                                        width: double.infinity,
                                         child: Semantics(
                                           button: true,
                                           label: _isLogin
@@ -667,70 +643,42 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                             onPressed:
                                                 _isLoading ? null : _handleAuth,
                                             style: ElevatedButton.styleFrom(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 16),
                                               backgroundColor:
-                                                  Colors.transparent,
-                                              shadowColor: Colors.transparent,
+                                                  ColorConstants.accentTeal,
+                                              foregroundColor: Colors.white,
                                               shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           14)),
-                                            ).merge(
-                                              ButtonStyle(
-                                                overlayColor:
-                                                    WidgetStateProperty
-                                                        .resolveWith(
-                                                  (states) => states.contains(
-                                                          WidgetState.pressed)
-                                                      ? colorScheme.primary
-                                                          .withOpacity(0.08)
-                                                      : null,
-                                                ),
-                                              ),
+                                              elevation: 0,
+                                              shadowColor: Colors.transparent,
                                             ),
-                                            child: Ink(
-                                              decoration: BoxDecoration(
-                                                gradient: LinearGradient(
-                                                    colors: [
-                                                      colorScheme.primary,
-                                                      colorScheme.secondary
-                                                    ]),
-                                                borderRadius:
-                                                    BorderRadius.circular(14),
-                                              ),
-                                              child: Center(
-                                                child: _isLoading
-                                                    ? const SizedBox(
-                                                        width: 24,
-                                                        height: 24,
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                                strokeWidth:
-                                                                    2.5,
-                                                                color: Colors
-                                                                    .white),
-                                                      )
-                                                    : Text(
-                                                        _isLogin
-                                                            ? _tr('Sign In',
-                                                                'تسجيل الدخول')
-                                                            : _showOtpField
-                                                                ? _tr(
-                                                                    'Verify & Continue',
-                                                                    'التحقق')
-                                                                : _tr(
-                                                                    'Send Code',
-                                                                    'إرسال الرمز'),
-                                                        style: const TextStyle(
+                                            child: Center(
+                                              child: _isLoading
+                                                  ? const SizedBox(
+                                                      width: 24,
+                                                      height: 24,
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                              strokeWidth: 2.5,
+                                                              color:
+                                                                  Colors.white),
+                                                    )
+                                                  : Text(
+                                                      _isLogin
+                                                          ? _tr('Sign In',
+                                                              'تسجيل الدخول')
+                                                          : _showOtpField
+                                                              ? _tr(
+                                                                  'Verify & Continue',
+                                                                  'التحقق')
+                                                              : _tr('Send Code',
+                                                                  'إرسال الرمز'),
+                                                      style: const TextStyle(
                                                           fontSize: 17,
                                                           fontWeight:
-                                                              FontWeight.w800,
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                              ),
+                                                              FontWeight.w800),
+                                                    ),
                                             ),
                                           ),
                                         ),
@@ -741,7 +689,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                               ),
                             ),
 
-                            const SizedBox(height: 22),
+                            const SizedBox(height: 55),
 
                             // Guest Mode
                             Semantics(
@@ -918,25 +866,25 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   }
 }
 
-// === Minor UI helpers ===
+// === UI Helpers ===
 class _Segment extends StatelessWidget {
   final bool active;
   final String label;
   final VoidCallback onTap;
+
   const _Segment(
       {required this.active, required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final cs = theme.colorScheme;
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 220),
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: active ? cs.primary : Colors.transparent,
+          color: active ? ColorConstants.accentTeal : Colors.transparent,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Text(
@@ -955,6 +903,7 @@ class _Segment extends StatelessWidget {
 class _Blob extends StatelessWidget {
   final double size;
   final List<Color> colors;
+
   const _Blob({required this.size, required this.colors});
 
   @override
@@ -965,10 +914,7 @@ class _Blob extends StatelessWidget {
         height: size,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          gradient: RadialGradient(
-            colors: colors,
-            radius: 0.8,
-          ),
+          gradient: RadialGradient(colors: colors, radius: 0.8),
           boxShadow: [
             BoxShadow(
               color: colors.first.withOpacity(0.25),

@@ -26,4 +26,5 @@ flutter:
   generate: true
 
   assets:
-    - assets/Images/
+    - assets/images/
+    - assets/images/khyate_logo.png
