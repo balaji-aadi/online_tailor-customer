@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:zayyan/models/models.dart';
-import 'package:zayyan/services/storage_service.dart';
-import 'package:zayyan/screens/measurement_screen.dart';
-import 'package:zayyan/screens/auth_screen.dart';
+import 'package:khyate_tailor_app/models/models.dart';
+import 'package:khyate_tailor_app/screens/auth/auth_screen.dart';
+import 'package:khyate_tailor_app/screens/measurement_screen.dart';
+import 'package:khyate_tailor_app/services/storage_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:zayyan/constants/color_constant.dart';
-import 'package:zayyan/screens/home/home_page_screen.dart';
-import 'package:zayyan/services/storage_service.dart';
-import 'package:zayyan/screens/order/orders_screen.dart';
-import 'package:zayyan/screens/message/messages_screen.dart';
-import 'package:zayyan/screens/profile/profile_screen.dart';
+import 'package:khyate_tailor_app/constants/color_constant.dart';
+import 'package:khyate_tailor_app/screens/home/home_page_screen.dart';
+import 'package:khyate_tailor_app/screens/message/messages_screen.dart';
+import 'package:khyate_tailor_app/screens/order/orders_screen.dart';
+import 'package:khyate_tailor_app/screens/profile/profile_screen.dart';
+import 'package:khyate_tailor_app/services/storage_service.dart';
 
 
 class HomeScreen extends StatefulWidget {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:zayyan/screens/home/home_screen.dart';
-import 'package:zayyan/theme.dart';
-import 'package:zayyan/services/storage_service.dart';
-import 'package:zayyan/screens/auth_screen.dart';
 
+import 'package:khyate_tailor_app/screens/auth/auth_screen.dart';
+import 'package:khyate_tailor_app/screens/home/home_screen.dart';
+import 'package:khyate_tailor_app/services/storage_service.dart';
+import 'package:khyate_tailor_app/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,8 +36,9 @@ class _ZayyanAppState extends State<ZayyanApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Zayyan - زين',
+      title: 'Khyate - Tailor App',
       debugShowCheckedModeBanner: false,
+      // scrollBehavior: const NoGlowScrollBehavior(),
       locale: Locale(_selectedLanguage),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
@@ -59,11 +60,11 @@ class _ZayyanAppState extends State<ZayyanApp> {
               body: Center(child: CircularProgressIndicator()),
             );
           }
-          
+
           if (snapshot.data == true) {
             return const HomeScreen();
           }
-          
+
           return AuthScreen(onLanguageChanged: (language) {
             setState(() => _selectedLanguage = language);
           });

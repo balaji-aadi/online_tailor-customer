@@ -1,7 +1,7 @@
-name: zayyan
+name: khyate_tailor_app
 description: "Step into style with this mobile app, seamlessly connecting you to UAE's finest tailors for traditional attire, from bespoke designs to perfect alterations."
-publish_to: "none"
-version: 1.0.0
+publish_to: none
+version: 1.0.0+1
 
 environment:
   sdk: ^3.6.0
@@ -14,7 +14,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   google_fonts: ^6.1.0
   shared_preferences: ^2.0.0
-  intl: 0.20.2
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
@@ -23,3 +23,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
+
+  assets:
+    - assets/Images/

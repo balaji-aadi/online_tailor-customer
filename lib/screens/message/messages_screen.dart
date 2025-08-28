@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:zayyan/models/models.dart';
-import 'package:zayyan/services/storage_service.dart';
-import 'package:zayyan/data/sample_data.dart';
+import 'package:khyate_tailor_app/data/sample_data.dart';
+import 'package:khyate_tailor_app/models/models.dart';
+import 'package:khyate_tailor_app/services/storage_service.dart';
 
 class MessagesScreen extends StatefulWidget {
   const MessagesScreen({super.key});

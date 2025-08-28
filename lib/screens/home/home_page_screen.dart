@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:zayyan/constants/color_constant.dart';
-import 'package:zayyan/models/models.dart';
-import 'package:zayyan/data/sample_data.dart';
-import 'package:zayyan/services/storage_service.dart';
-import 'package:zayyan/screens/service_detail_screen.dart';
+import 'package:khyate_tailor_app/constants/color_constant.dart';
+import 'package:khyate_tailor_app/data/sample_data.dart';
+import 'package:khyate_tailor_app/models/models.dart';
+import 'package:khyate_tailor_app/screens/service_detail_screen.dart';
+import 'package:khyate_tailor_app/services/storage_service.dart';
 
 
 class HomePageScreen extends StatefulWidget {
@@ -62,9 +62,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
     final isRTL = _selectedLanguage == 'ar';
 
     return Container(
-      decoration: const BoxDecoration(
-        gradient: ColorConstants.backgroundGradient,
-      ),
+     
       child: Column(
         children: [
           // 🔍 Search and Filter Section

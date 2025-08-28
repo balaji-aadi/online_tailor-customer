@@ -53,7 +53,7 @@ class ColorConstants {
   /// Primary gradient from gold to light gold
   static const LinearGradient primaryGradient = LinearGradient(
     colors: [primaryGold, lightGold],
-    begin: Alignment.topLeft,
+    begin: Alignment.topLeft, 
     end: Alignment.bottomRight,
   );
 

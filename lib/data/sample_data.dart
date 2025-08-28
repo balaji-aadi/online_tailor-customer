@@ -1,5 +1,4 @@
-import 'package:zayyan/models/models.dart';
-
+import 'package:khyate_tailor_app/models/models.dart';
 class SampleData {
   static List<Tailor> getTailors() => [
         Tailor(

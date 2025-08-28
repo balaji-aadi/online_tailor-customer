@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:zayyan/models/models.dart';
-import 'package:zayyan/services/storage_service.dart';
-import 'package:zayyan/data/sample_data.dart';
+import 'package:khyate_tailor_app/data/sample_data.dart';
+import 'package:khyate_tailor_app/models/models.dart';
+import 'package:khyate_tailor_app/services/storage_service.dart';
 
 class MeasurementScreen extends StatefulWidget {
   const MeasurementScreen({super.key});
@@ -66,10 +66,8 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      _tr(
-                        'Add your measurements for custom tailoring',
-                        'أضف قياساتك للخياطة المخصصة'
-                      ),
+                      _tr('Add your measurements for custom tailoring',
+                          'أضف قياساتك للخياطة المخصصة'),
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.outline,
                       ),
@@ -158,7 +156,8 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
               Container(
                 padding: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(
-                  border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
+                  border:
+                      Border(bottom: BorderSide(color: Colors.grey.shade200)),
                 ),
                 child: Row(
                   children: [
@@ -168,8 +167,8 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                             ? _tr('Edit Measurements', 'تعديل القياسات')
                             : _tr('Add Measurements', 'إضافة القياسات'),
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                     ),
                     IconButton(
@@ -195,9 +194,11 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                             child: TextField(
                               controller: nameController,
                               decoration: InputDecoration(
-                                labelText: _tr('Profile Name (English)', 'اسم الملف (بالإنجليزية)'),
+                                labelText: _tr('Profile Name (English)',
+                                    'اسم الملف (بالإنجليزية)'),
                                 border: const OutlineInputBorder(),
-                                hintText: _tr('e.g. Summer 2025', 'مثال: صيف 2025'),
+                                hintText:
+                                    _tr('e.g. Summer 2025', 'مثال: صيف 2025'),
                               ),
                             ),
                           ),
@@ -221,24 +222,27 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                       // Measurements
                       Text(
                         _tr('Body Measurements (cm)', 'قياسات الجسم (سم)'),
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
                       const SizedBox(height: 8),
 
                       ...measurementLabels.entries.map((entry) => Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: TextField(
-                          controller: controllers[entry.key]!,
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                          decoration: InputDecoration(
-                            labelText: entry.value,
-                            border: const OutlineInputBorder(),
-                            suffixText: 'cm',
-                          ),
-                        ),
-                      )),
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: TextField(
+                              controller: controllers[entry.key]!,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
+                              decoration: InputDecoration(
+                                labelText: entry.value,
+                                border: const OutlineInputBorder(),
+                                suffixText: 'cm',
+                              ),
+                            ),
+                          )),
 
                       const SizedBox(height: 16),
 
@@ -250,9 +254,11 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                               controller: notesController,
                               maxLines: 2,
                               decoration: InputDecoration(
-                                labelText: _tr('Notes (Optional)', 'ملاحظات (اختياري)'),
+                                labelText: _tr(
+                                    'Notes (Optional)', 'ملاحظات (اختياري)'),
                                 border: const OutlineInputBorder(),
-                                hintText: _tr('Any special notes...', 'أي ملاحظات خاصة...'),
+                                hintText: _tr('Any special notes...',
+                                    'أي ملاحظات خاصة...'),
                               ),
                             ),
                           ),
@@ -282,7 +288,8 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                             if (nameController.text.trim().isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(_tr('Please enter profile name', 'يرجى إدخال اسم الملف')),
+                                  content: Text(_tr('Please enter profile name',
+                                      'يرجى إدخال اسم الملف')),
                                 ),
                               );
                               return;
@@ -290,7 +297,8 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
 
                             final measurements = <String, double>{};
                             for (final entry in controllers.entries) {
-                              final value = double.tryParse(entry.value.text.trim());
+                              final value =
+                                  double.tryParse(entry.value.text.trim());
                               if (value != null && value > 0) {
                                 measurements[entry.key] = value;
                               }
@@ -299,20 +307,30 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                             if (measurements.isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(_tr('Please enter at least one measurement', 'يرجى إدخال قياس واحد على الأقل')),
+                                  content: Text(_tr(
+                                      'Please enter at least one measurement',
+                                      'يرجى إدخال قياس واحد على الأقل')),
                                 ),
                               );
                               return;
                             }
 
                             final measurement = Measurement(
-                              id: existingMeasurement?.id ?? 'measure_${DateTime.now().millisecondsSinceEpoch}',
+                              id: existingMeasurement?.id ??
+                                  'measure_${DateTime.now().millisecondsSinceEpoch}',
                               name: nameController.text.trim(),
-                              nameAr: nameArController.text.trim().isNotEmpty ? nameArController.text.trim() : nameController.text.trim(),
+                              nameAr: nameArController.text.trim().isNotEmpty
+                                  ? nameArController.text.trim()
+                                  : nameController.text.trim(),
                               measurements: measurements,
-                              createdAt: existingMeasurement?.createdAt ?? DateTime.now(),
-                              notes: notesController.text.trim().isNotEmpty ? notesController.text.trim() : null,
-                              notesAr: notesArController.text.trim().isNotEmpty ? notesArController.text.trim() : null,
+                              createdAt: existingMeasurement?.createdAt ??
+                                  DateTime.now(),
+                              notes: notesController.text.trim().isNotEmpty
+                                  ? notesController.text.trim()
+                                  : null,
+                              notesAr: notesArController.text.trim().isNotEmpty
+                                  ? notesArController.text.trim()
+                                  : null,
                             );
 
                             await StorageService.saveMeasurement(measurement);
@@ -323,8 +341,10 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                               SnackBar(
                                 content: Text(
                                   isEditing
-                                      ? _tr('Measurements updated', 'تم تحديث القياسات')
-                                      : _tr('Measurements saved', 'تم حفظ القياسات'),
+                                      ? _tr('Measurements updated',
+                                          'تم تحديث القياسات')
+                                      : _tr('Measurements saved',
+                                          'تم حفظ القياسات'),
                                 ),
                                 backgroundColor: Colors.green,
                               ),
@@ -356,9 +376,8 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
       builder: (context) => AlertDialog(
         title: Text(_tr('Delete Measurement', 'حذف القياسات')),
         content: Text(_tr(
-          'Are you sure you want to delete this measurement profile?',
-          'هل أنت متأكد من حذف ملف القياسات هذا؟'
-        )),
+            'Are you sure you want to delete this measurement profile?',
+            'هل أنت متأكد من حذف ملف القياسات هذا؟')),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -419,7 +438,9 @@ class _MeasurementCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        language == 'ar' ? measurement.nameAr : measurement.name,
+                        language == 'ar'
+                            ? measurement.nameAr
+                            : measurement.name,
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -478,9 +499,11 @@ class _MeasurementCard extends StatelessWidget {
                 children: measurement.measurements.entries.map((entry) {
                   final label = measurementLabels[entry.key] ?? entry.key;
                   return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                      color: theme.colorScheme.primaryContainer
+                          .withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Text(
@@ -500,7 +523,8 @@ class _MeasurementCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                  color: theme.colorScheme.surfaceContainerHighest
+                      .withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Column(
