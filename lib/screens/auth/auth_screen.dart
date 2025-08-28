@@ -237,14 +237,15 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                           'Language selector', 'اختيار اللغة'),
                                       child: SegmentedButton<String>(
                                         style: SegmentedButton.styleFrom(
-                                          backgroundColor: Colors.transparent,
+                                          backgroundColor:
+                                              ColorConstants.deepNavy,
                                           selectedBackgroundColor:
-                                              colorScheme.primary,
+                                              ColorConstants.accentTeal,
                                           selectedForegroundColor: Colors.white,
                                           side: BorderSide(
                                               color: Colors.grey.shade200),
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 10),
+                                              horizontal: 20),
                                         ),
                                         segments: [
                                           ButtonSegment<String>(
@@ -321,7 +322,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                       textAlign: TextAlign.center,
                                       style:
                                           theme.textTheme.titleMedium?.copyWith(
-                                        color: Colors.grey[700],
+                                        color: ColorConstants.darkNavy,
                                         fontWeight: FontWeight.w600,
                                         fontSize: 16,
                                       ),
@@ -349,7 +350,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Icon(Icons.design_services_outlined,
-                                        size: 18,
+                                        size: 30,
                                         color: colorScheme.primary
                                             .withOpacity(0.8)),
                                   ),
@@ -360,6 +361,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                 ],
                               ),
                             ),
+                            const SizedBox(height: 10),
 
                             // Auth Form Card
                             SlideTransition(
@@ -721,14 +723,14 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Icon(Icons.person_outline,
-                                          color: colorScheme.secondary,
+                                          color: ColorConstants.primaryGold,
                                           size: 20),
                                       const SizedBox(width: 10),
                                       Text(
                                         _tr('Continue as Guest',
                                             'المتابعة كضيف'),
                                         style: TextStyle(
-                                          color: colorScheme.secondary,
+                                          color: ColorConstants.primaryGold,
                                           fontWeight: FontWeight.w700,
                                           fontSize: 15,
                                         ),
@@ -754,11 +756,6 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                   textAlign: TextAlign.center,
                                 ),
                                 const SizedBox(height: 6),
-                                Text(
-                                  'v1.0.0',
-                                  style: theme.textTheme.bodySmall
-                                      ?.copyWith(color: Colors.grey[400]),
-                                ),
                                 const SizedBox(height: 12),
                               ],
                             ),
@@ -813,19 +810,28 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
           obscureText: obscureText,
           maxLength: maxLength,
           textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
-          style: theme.textTheme.bodyLarge,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            color: ColorConstants.primaryGold,
+          ),
           textInputAction: textInputAction,
           onFieldSubmitted: onFieldSubmitted,
           decoration: InputDecoration(
             labelText: labelText,
             hintText: hintText,
-            prefixIcon: Icon(prefixIcon, color: colorScheme.primary),
+            prefixIcon: Icon(prefixIcon, color: ColorConstants.primaryGold),
             suffixIcon: suffixIcon,
             filled: true,
             fillColor: Colors.white,
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
             counterText: '',
+            labelStyle:
+                WidgetStateTextStyle.resolveWith((Set<WidgetState> states) {
+              if (states.contains(WidgetState.focused)) {
+                return TextStyle(color: ColorConstants.primaryGold);
+              }
+              return TextStyle(color: Colors.grey[600]); // Default gray
+            }),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
               borderSide: BorderSide(color: Colors.grey[300]!),
@@ -836,7 +842,8 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide(color: colorScheme.primary, width: 2),
+              borderSide:
+                  BorderSide(color: ColorConstants.primaryGold, width: 2),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
