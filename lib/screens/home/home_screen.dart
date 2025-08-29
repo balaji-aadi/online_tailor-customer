@@ -34,12 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
     switch (_selectedIndex) {
       case 0:
         return Scaffold(
-          // appBar: AppBar(
-          //   title: Text(_tr('khyate', 'الرئيسية')),
-          //   backgroundColor: ColorConstants.deepNavy,
-          //   foregroundColor: ColorConstants.warmIvory,
-          //   elevation: 0,
-          // ),
           body: const HomePageScreen(),
         );
       case 1:
