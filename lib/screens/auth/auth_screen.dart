@@ -213,72 +213,67 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             // Language Selector
+                            // Language Selector
                             FadeTransition(
                               opacity: _fadeAnimation ??
                                   const AlwaysStoppedAnimation(1.0),
                               child: Align(
                                 alignment: Alignment.center,
-                                child: DecoratedBox(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(28),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.06),
-                                        blurRadius: 16,
-                                        offset: const Offset(0, 6),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4),
-                                    child: Semantics(
-                                      label: _tr(
-                                          'Language selector', 'اختيار اللغة'),
-                                      child: SegmentedButton<String>(
-                                        style: SegmentedButton.styleFrom(
-                                          backgroundColor:
-                                              ColorConstants.deepNavy,
-                                          selectedBackgroundColor:
-                                              ColorConstants.accentTeal,
-                                          selectedForegroundColor: Colors.white,
-                                          side: BorderSide(
-                                              color: Colors.grey.shade200),
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 20),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal:
+                                          40), // Optional: control width
+                                  child: Semantics(
+                                    label: _tr(
+                                        'Language selector', 'اختيار اللغة'),
+                                    child: SegmentedButton<String>(
+                                      style: SegmentedButton.styleFrom(
+                                        backgroundColor:
+                                            ColorConstants.deepNavy,
+                                        // Soft background
+                                        selectedBackgroundColor:
+                                            ColorConstants.accentTeal,
+                                        selectedForegroundColor: Colors.white,
+                                        side: BorderSide
+                                            .none, // 👈 Removes all borders
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(28),
                                         ),
-                                        segments: [
-                                          ButtonSegment<String>(
-                                            value: 'en',
-                                            label: Text(
-                                              'EN',
-                                              style: theme.textTheme.labelLarge
-                                                  ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w700),
-                                            ),
-                                          ),
-                                          ButtonSegment<String>(
-                                            value: 'ar',
-                                            label: Text(
-                                              'عربي',
-                                              style: theme.textTheme.labelLarge
-                                                  ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w700),
-                                            ),
-                                          ),
-                                        ],
-                                        selected: {_selectedLanguage},
-                                        onSelectionChanged:
-                                            (Set<String> selection) {
-                                          setState(() => _selectedLanguage =
-                                              selection.first);
-                                          widget.onLanguageChanged(
-                                              _selectedLanguage);
-                                          HapticFeedback.selectionClick();
-                                        },
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20),
                                       ),
+                                      segments: [
+                                        ButtonSegment<String>(
+                                          value: 'en',
+                                          label: Text(
+                                            'EN',
+                                            style: theme.textTheme.labelLarge
+                                                ?.copyWith(
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                        ButtonSegment<String>(
+                                          value: 'ar',
+                                          label: Text(
+                                            'عربي',
+                                            style: theme.textTheme.labelLarge
+                                                ?.copyWith(
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                      selected: {_selectedLanguage},
+                                      onSelectionChanged:
+                                          (Set<String> selection) {
+                                        setState(() => _selectedLanguage =
+                                            selection.first);
+                                        widget.onLanguageChanged(
+                                            _selectedLanguage);
+                                        HapticFeedback.selectionClick();
+                                      },
                                     ),
                                   ),
                                 ),
@@ -342,18 +337,15 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                                       child: Divider(
                                           color: Colors.grey[300],
                                           thickness: 1)),
-                                  Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color:
-                                          colorScheme.primary.withOpacity(0.10),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Icon(Icons.design_services_outlined,
-                                        size: 30,
-                                        color: colorScheme.primary
-                                            .withOpacity(0.8)),
+
+                                 
+                                  Icon(
+                                    Icons.design_services_outlined,
+                                    size: 47,
+                                    color: colorScheme.primary
+                                        .withOpacity(1.0), // Very transparent
                                   ),
+
                                   Expanded(
                                       child: Divider(
                                           color: Colors.grey[300],
