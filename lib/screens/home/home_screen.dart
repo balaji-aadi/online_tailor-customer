@@ -6,7 +6,6 @@ import 'package:khyate_tailor_app/screens/order/orders_screen.dart';
 import 'package:khyate_tailor_app/screens/profile/profile_screen.dart';
 import 'package:khyate_tailor_app/services/storage_service.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -35,12 +34,12 @@ class _HomeScreenState extends State<HomeScreen> {
     switch (_selectedIndex) {
       case 0:
         return Scaffold(
-          appBar: AppBar(
-            title: Text(_tr('Home', 'الرئيسية')),
-            backgroundColor: ColorConstants.deepNavy,
-            foregroundColor: ColorConstants.warmIvory,
-            elevation: 0,
-          ),
+          // appBar: AppBar(
+          //   title: Text(_tr('khyate', 'الرئيسية')),
+          //   backgroundColor: ColorConstants.deepNavy,
+          //   foregroundColor: ColorConstants.warmIvory,
+          //   elevation: 0,
+          // ),
           body: const HomePageScreen(),
         );
       case 1:
@@ -63,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         body: _getCurrentScreen(),
         bottomNavigationBar: NavigationBar(
-          backgroundColor: ColorConstants.warmIvory,
+          backgroundColor: ColorConstants.accentTeal,
           selectedIndex: _selectedIndex,
           indicatorColor: ColorConstants.primaryGold.withOpacity(0.2),
           onDestinationSelected: (index) {
@@ -72,28 +71,28 @@ class _HomeScreenState extends State<HomeScreen> {
           destinations: [
             NavigationDestination(
               icon: const Icon(Icons.home_outlined,
-                  color: ColorConstants.deepNavy),
+                  color: ColorConstants.warmIvory),
               selectedIcon:
                   const Icon(Icons.home, color: ColorConstants.primaryGold),
               label: _tr('Home', 'الرئيسية'),
             ),
             NavigationDestination(
               icon: const Icon(Icons.shopping_bag_outlined,
-                  color: ColorConstants.deepNavy),
+                  color: ColorConstants.warmIvory),
               selectedIcon: const Icon(Icons.shopping_bag,
                   color: ColorConstants.primaryGold),
               label: _tr('Orders', 'الطلبات'),
             ),
             NavigationDestination(
               icon: const Icon(Icons.chat_outlined,
-                  color: ColorConstants.deepNavy),
+                  color: ColorConstants.warmIvory),
               selectedIcon:
                   const Icon(Icons.chat, color: ColorConstants.primaryGold),
               label: _tr('Messages', 'الرسائل'),
             ),
             NavigationDestination(
               icon: const Icon(Icons.person_outline,
-                  color: ColorConstants.deepNavy),
+                  color: ColorConstants.warmIvory),
               selectedIcon:
                   const Icon(Icons.person, color: ColorConstants.primaryGold),
               label: _tr('Profile', 'الملف الشخصي'),
