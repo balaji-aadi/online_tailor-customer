@@ -8,6 +8,7 @@ import 'package:khyate_tailor_app/services/storage_service.dart';
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
 
+  // Creates the State instance for HomePageScreen.
   @override
   State<HomePageScreen> createState() => _HomePageScreenState();
 }
@@ -20,6 +21,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
   ServiceType? _selectedServiceType;
   final TextEditingController _searchController = TextEditingController();
 
+  // Initializes widget state, loads language, and sets initial filtered tailors.
   @override
   void initState() {
     super.initState();
@@ -27,13 +29,16 @@ class _HomePageScreenState extends State<HomePageScreen> {
     _filteredTailors = _tailors;
   }
 
+  // Loads the saved language from StorageService and updates the state.
   Future<void> _loadLanguage() async {
     final language = await StorageService.getLanguage();
     setState(() => _selectedLanguage = language);
   }
 
+  // Translation helper: returns Arabic or English text based on selected language.
   String _tr(String en, String ar) => _selectedLanguage == 'ar' ? ar : en;
 
+  // Applies search text and selected service type to filter the tailors list.
   void _filterTailors() {
     setState(() {
       _filteredTailors = _tailors.where((tailor) {
@@ -55,6 +60,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
     });
   }
 
+  // Builds the Home page UI and applies RTL/LTR direction based on language.
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -335,6 +341,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
     );
   }
 
+  // Returns a localized label for the given ServiceType.
   String _getServiceTypeLabel(ServiceType type) {
     switch (type) {
       case ServiceType.readymade:
@@ -346,6 +353,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
     }
   }
 
+  // Displays a bottom sheet listing the selected tailor's services; navigates to details on tap.
   void _showTailorServices(Tailor tailor) {
     final tailorServices =
         _services.where((s) => s.tailorId == tailor.id).toList();
@@ -458,6 +466,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
     );
   }
 
+  // Disposes controllers and cleans up resources.
   @override
   void dispose() {
     _searchController.dispose();
@@ -475,6 +484,7 @@ class _FeaturedTailorCard extends StatelessWidget {
     super.key,
   });
 
+  // Builds the featured tailor card UI.
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -604,6 +614,7 @@ class _TailorCard extends StatelessWidget {
     super.key,
   });
 
+  // Builds the tailor list item card with tap handling.
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -630,7 +641,7 @@ class _TailorCard extends StatelessWidget {
           ),
           subtitle: Text(
             language == 'ar' ? tailor.locationAr : tailor.location,
-            style: TextStyle(color: ColorConstants.deepNavy.withOpacity(0.7)),
+            style: TextStyle(color: ColorConstants.accentTeal),
           ),
           trailing: Icon(Icons.arrow_forward_ios,
               color: ColorConstants.primaryGold, size: 20),
@@ -652,6 +663,7 @@ class _ServiceCard extends StatelessWidget {
     super.key,
   });
 
+  // Builds the service list item card and triggers onTap when pressed.
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -689,6 +701,7 @@ class _ProfileAvatar extends StatelessWidget {
     required this.radius,
   });
 
+  // Builds a circular avatar that loads an image with error and loading fallbacks.
   @override
   Widget build(BuildContext context) {
     return ClipOval(
