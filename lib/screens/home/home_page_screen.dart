@@ -66,277 +66,336 @@ class _HomePageScreenState extends State<HomePageScreen> {
     final theme = Theme.of(context);
     final isRTL = _selectedLanguage == 'ar';
 
-    return Scaffold(
-      backgroundColor: ColorConstants.warmIvory,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 🔍 Header with App Title, Search and Filter Section
-          Container(
-            padding: EdgeInsets.fromLTRB(
-                20, MediaQuery.of(context).padding.top + 16, 20, 20),
-            decoration: BoxDecoration(
-              gradient: ColorConstants.accentGradient,
-              boxShadow: [
-                BoxShadow(
-                  color: ColorConstants.deepNavy.withOpacity(0.2),
-                  blurRadius: 12,
-                  offset: const Offset(0, 6),
-                ),
-              ],
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(28),
-                bottomRight: Radius.circular(28),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // App Title Section
-                Container(
-                  margin: const EdgeInsets.only(bottom: 24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _tr('Khyate - Tailor App', 'خياطة - تطبيق الخياط'),
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 28,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        _tr('Find the perfect tailor for your needs',
-                            'اعثر على الخياط المثالي لاحتياجاتك'),
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: Colors.white.withOpacity(0.9),
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Search Bar with improved styling
-                Container(
-                  margin: const EdgeInsets.only(bottom: 20),
-                  child: TextField(
-                    controller: _searchController,
-                    textDirection:
-                        isRTL ? TextDirection.rtl : TextDirection.ltr,
-                    decoration: InputDecoration(
-                      hintText: _tr('Search tailors, services...',
-                          'البحث عن الخياطين، الخدمات...'),
-                      hintStyle: TextStyle(
-                          color: ColorConstants.deepNavy.withOpacity(0.6)),
-                      prefixIcon: Container(
-                        margin: const EdgeInsets.all(8),
-                        child: const Icon(Icons.search,
-                            color: ColorConstants.primaryGold, size: 22),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                      fillColor: ColorConstants.softIvory,
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 18, horizontal: 24),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
-                        borderSide: BorderSide(
-                          color: Colors.white.withOpacity(0.3),
-                          width: 1,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
-                        borderSide: const BorderSide(
-                          color: ColorConstants.primaryGold,
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                    style: const TextStyle(
-                      color: ColorConstants.deepNavy,
-                      fontSize: 16,
-                    ),
-                    onChanged: (value) => _filterTailors(),
-                  ),
-                ),
-
-                // Service Type Filter Chips with better spacing and colors
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(right: 8),
-                        child: FilterChip(
-                          label: Text(
-                            _tr('All', 'الكل'),
-                            style: TextStyle(
-                              color: _selectedServiceType == null
-                                  ? Colors.white
-                                  : ColorConstants.deepNavy,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          selected: _selectedServiceType == null,
-                          selectedColor: ColorConstants.primaryGold,
-                          backgroundColor: Colors.white.withOpacity(0.9),
-                          checkmarkColor: Colors.white,
-                          elevation: 2,
-                          shadowColor: ColorConstants.deepNavy.withOpacity(0.1),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 8),
-                          onSelected: (selected) {
-                            setState(() => _selectedServiceType = null);
-                            _filterTailors();
-                          },
-                        ),
-                      ),
-                      ...ServiceType.values.map((type) => Container(
-                            margin: const EdgeInsets.only(right: 8),
-                            child: FilterChip(
-                              label: Text(
-                                _getServiceTypeLabel(type),
-                                style: TextStyle(
-                                  color: _selectedServiceType == type
-                                      ? Colors.white
-                                      : ColorConstants.deepNavy,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              selected: _selectedServiceType == type,
-                              selectedColor: ColorConstants.primaryGold,
-                              backgroundColor: Colors.white.withOpacity(0.9),
-                              checkmarkColor: Colors.white,
-                              elevation: 2,
-                              shadowColor:
-                                  ColorConstants.deepNavy.withOpacity(0.1),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 8),
-                              onSelected: (selected) {
-                                setState(() {
-                                  _selectedServiceType = selected ? type : null;
-                                });
-                                _filterTailors();
-                              },
-                            ),
-                          )),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // 📋 Content with subtle background gradient for depth
-          Expanded(
-            child: Container(
+    return Directionality(
+      textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+      child: Scaffold(
+        backgroundColor: ColorConstants.warmIvory,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 🔍 Header with App Title, Search and Filter Section
+            Container(
+              padding: EdgeInsets.fromLTRB(
+                  20, MediaQuery.of(context).padding.top + 16, 20, 20),
               decoration: BoxDecoration(
-                gradient: ColorConstants.backgroundGradient,
+                gradient: ColorConstants.accentGradient,
+                boxShadow: [
+                  BoxShadow(
+                    color: ColorConstants.deepNavy.withOpacity(0.2),
+                    blurRadius: 12,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(28),
+                  bottomRight: Radius.circular(28),
+                ),
               ),
-              child: _filteredTailors.isEmpty
-                  ? Center(
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 32),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // App Title Section with Notification and Language Toggle
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(Icons.search_off,
-                                size: 80,
-                                color: ColorConstants.grey.withOpacity(0.5)),
-                            const SizedBox(height: 16),
-                            Text(
-                              _tr('No tailors found',
-                                  'لم يتم العثور على خياطين'),
-                              style: theme.textTheme.titleLarge?.copyWith(
-                                  color: ColorConstants.deepNavy,
-                                  fontWeight: FontWeight.w600),
+                            Expanded(
+                              child: Text(
+                                _tr('Khyate', 'خياطة - تطبيق الخياط'),
+                                style: theme.textTheme.headlineMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 28,
+                                  letterSpacing: 0.5,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                              _tr('Try adjusting your search or filters',
-                                  'جرب تعديل البحث أو المرشحات'),
-                              style: theme.textTheme.bodyLarge?.copyWith(
-                                  color:
-                                      ColorConstants.deepNavy.withOpacity(0.7)),
-                              textAlign: TextAlign.center,
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.notifications,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {},
+                                ),
+                                const SizedBox(width: 8),
+                                Row(
+                                  children: [
+                                    Text(
+                                      'EN',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    Switch(
+                                      value: _selectedLanguage == 'ar',
+                                      onChanged: (value) async {
+                                        final newLang = value ? 'ar' : 'en';
+                                        await StorageService.setLanguage(
+                                            newLang);
+                                        setState(
+                                            () => _selectedLanguage = newLang);
+                                      },
+                                      activeColor: ColorConstants.primaryGold,
+                                      inactiveThumbColor: Colors.white,
+                                      activeTrackColor:
+                                          Colors.white.withOpacity(0.5),
+                                      inactiveTrackColor:
+                                          Colors.white.withOpacity(0.3),
+                                    ),
+                                    Text(
+                                      'AR',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ),
-                    )
-                  : ListView(
-                      padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
-                      children: [
-                        // Featured Section with enhanced title styling
-                        if (_searchController.text.isEmpty &&
-                            _selectedServiceType == null) ...[
-                          Container(
-                            margin: const EdgeInsets.only(bottom: 20),
-                            child: Text(
-                              _tr('Featured Tailors', 'خياطون مميزون'),
-                              style: theme.textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: ColorConstants.primaryGold,
-                                fontSize: 22,
-                              ),
-                            ),
+                        const SizedBox(height: 6),
+                        Text(
+                          _tr('Find the perfect tailor for your needs',
+                              'اعثر على الخياط المثالي لاحتياجاتك'),
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: Colors.white.withOpacity(0.9),
+                            fontSize: 16,
                           ),
-                          Container(
-                            margin: const EdgeInsets.only(bottom: 32),
-                            height: 240,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: _filteredTailors.take(3).length,
-                              itemBuilder: (context, index) {
-                                final tailor = _filteredTailors[index];
-                                return _FeaturedTailorCard(
-                                  tailor: tailor,
-                                  language: _selectedLanguage,
-                                );
-                              },
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(bottom: 20),
-                            child: Text(
-                              _tr('All Tailors', 'جميع الخياطين'),
-                              style: theme.textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: ColorConstants.primaryGold,
-                                fontSize: 22,
-                              ),
-                            ),
-                          ),
-                        ],
-
-                        // Tailors List with cards
-                        ...(_filteredTailors.map((tailor) => Container(
-                              margin: const EdgeInsets.only(bottom: 16),
-                              child: _TailorCard(
-                                tailor: tailor,
-                                language: _selectedLanguage,
-                                onTap: () => _showTailorServices(tailor),
-                              ),
-                            ))),
+                        ),
                       ],
                     ),
+                  ),
+
+                  // Search Bar with improved styling
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 20),
+                    child: TextField(
+                      controller: _searchController,
+                      textDirection:
+                          isRTL ? TextDirection.rtl : TextDirection.ltr,
+                      decoration: InputDecoration(
+                        hintText: _tr('Search tailors, services...',
+                            'البحث عن الخياطين، الخدمات...'),
+                        hintStyle: TextStyle(
+                            color: ColorConstants.deepNavy.withOpacity(0.6)),
+                        prefixIcon: Container(
+                          margin: const EdgeInsets.all(8),
+                          child: const Icon(Icons.search,
+                              color: ColorConstants.primaryGold, size: 22),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(24),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: ColorConstants.softIvory,
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 18, horizontal: 24),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(24),
+                          borderSide: BorderSide(
+                            color: Colors.white.withOpacity(0.3),
+                            width: 1,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(24),
+                          borderSide: const BorderSide(
+                            color: ColorConstants.primaryGold,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                      style: const TextStyle(
+                        color: ColorConstants.deepNavy,
+                        fontSize: 16,
+                      ),
+                      onChanged: (value) => _filterTailors(),
+                    ),
+                  ),
+
+                  // Service Type Filter Chips with better spacing and colors
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(right: 8),
+                          child: FilterChip(
+                            label: Text(
+                              _tr('All', 'الكل'),
+                              style: TextStyle(
+                                color: _selectedServiceType == null
+                                    ? Colors.white
+                                    : ColorConstants.deepNavy,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            selected: _selectedServiceType == null,
+                            selectedColor: ColorConstants.primaryGold,
+                            backgroundColor: Colors.white.withOpacity(0.9),
+                            checkmarkColor: Colors.white,
+                            elevation: 2,
+                            shadowColor:
+                                ColorConstants.deepNavy.withOpacity(0.1),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8),
+                            onSelected: (selected) {
+                              setState(() => _selectedServiceType = null);
+                              _filterTailors();
+                            },
+                          ),
+                        ),
+                        ...ServiceType.values.map((type) => Container(
+                              margin: const EdgeInsets.only(right: 8),
+                              child: FilterChip(
+                                label: Text(
+                                  _getServiceTypeLabel(type),
+                                  style: TextStyle(
+                                    color: _selectedServiceType == type
+                                        ? Colors.white
+                                        : ColorConstants.deepNavy,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                selected: _selectedServiceType == type,
+                                selectedColor: ColorConstants.primaryGold,
+                                backgroundColor: Colors.white.withOpacity(0.9),
+                                checkmarkColor: Colors.white,
+                                elevation: 2,
+                                shadowColor:
+                                    ColorConstants.deepNavy.withOpacity(0.1),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 8),
+                                onSelected: (selected) {
+                                  setState(() {
+                                    _selectedServiceType =
+                                        selected ? type : null;
+                                  });
+                                  _filterTailors();
+                                },
+                              ),
+                            )),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+
+            // 📋 Content with subtle background gradient for depth
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: ColorConstants.backgroundGradient,
+                ),
+                child: _filteredTailors.isEmpty
+                    ? Center(
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 32),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.search_off,
+                                  size: 80,
+                                  color: ColorConstants.grey.withOpacity(0.5)),
+                              const SizedBox(height: 16),
+                              Text(
+                                _tr('No tailors found',
+                                    'لم يتم العثور على خياطين'),
+                                style: theme.textTheme.titleLarge?.copyWith(
+                                    color: ColorConstants.deepNavy,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                _tr('Try adjusting your search or filters',
+                                    'جرب تعديل البحث أو المرشحات'),
+                                style: theme.textTheme.bodyLarge?.copyWith(
+                                    color: ColorConstants.deepNavy
+                                        .withOpacity(0.7)),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    : ListView(
+                        padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
+                        children: [
+                          // Featured Section with enhanced title styling
+                          if (_searchController.text.isEmpty &&
+                              _selectedServiceType == null) ...[
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 20),
+                              child: Text(
+                                _tr('Featured Tailors', 'خياطون مميزون'),
+                                style: theme.textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: ColorConstants.primaryGold,
+                                  fontSize: 22,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 32),
+                              height: 240,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: _filteredTailors.take(3).length,
+                                itemBuilder: (context, index) {
+                                  final tailor = _filteredTailors[index];
+                                  return _FeaturedTailorCard(
+                                    tailor: tailor,
+                                    language: _selectedLanguage,
+                                  );
+                                },
+                              ),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 20),
+                              child: Text(
+                                _tr('All Tailors', 'جميع الخياطين'),
+                                style: theme.textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: ColorConstants.primaryGold,
+                                  fontSize: 22,
+                                ),
+                              ),
+                            ),
+                          ],
+
+                          // Tailors List with cards
+                          ...(_filteredTailors.map((tailor) => Container(
+                                margin: const EdgeInsets.only(bottom: 16),
+                                child: _TailorCard(
+                                  tailor: tailor,
+                                  language: _selectedLanguage,
+                                  onTap: () => _showTailorServices(tailor),
+                                ),
+                              ))),
+                        ],
+                      ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
