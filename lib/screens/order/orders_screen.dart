@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:khyate_tailor_app/constants/color_constant.dart';
 import 'package:khyate_tailor_app/models/models.dart';
 import 'package:khyate_tailor_app/services/storage_service.dart';
 
-
 class OrdersScreen extends StatefulWidget {
+  /// Creates the Orders screen which lists and filters user orders.
   const OrdersScreen({super.key});
 
+  /// Creates the mutable state for this widget.
   @override
   State<OrdersScreen> createState() => _OrdersScreenState();
 }
@@ -15,12 +17,16 @@ class _OrdersScreenState extends State<OrdersScreen> {
   List<Order> _orders = [];
   ServiceType? _selectedFilter;
 
+  /// Initializes state and triggers initial data load from storage.
   @override
   void initState() {
     super.initState();
     _loadData();
   }
 
+  /// Loads persisted language and orders from storage and updates state.
+  ///
+  /// Sorts orders by descending order date after fetching.
   Future<void> _loadData() async {
     final language = await StorageService.getLanguage();
     final orders = await StorageService.getOrders();
@@ -30,8 +36,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
     });
   }
 
+  /// Simple translator helper that returns [ar] if the selected language is Arabic, otherwise [en].
   String _tr(String en, String ar) => _selectedLanguage == 'ar' ? ar : en;
 
+  /// Returns the list of orders filtered by the currently selected [ServiceType] if any.
   List<Order> get _filteredOrders {
     if (_selectedFilter == null) return _orders;
     return _orders
@@ -39,6 +47,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
         .toList();
   }
 
+  /// Builds the main UI for the Orders screen including filters and the orders list.
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -47,7 +56,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
     return Directionality(
       textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor: ColorConstants.accentTeal,
+          foregroundColor: ColorConstants.warmIvory,
           title: Text(_tr('My Orders', 'طلباتي')),
           centerTitle: false,
         ),
@@ -57,7 +69,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surface,
+                color: Colors.white, // Change background color to white
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.1),
@@ -67,59 +79,129 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 ],
               ),
               child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    FilterChip(
-                      label: Text(_tr('All Orders', 'جميع الطلبات')),
-                      selected: _selectedFilter == null,
-                      onSelected: (selected) {
-                        setState(() => _selectedFilter = null);
-                      },
-                    ),
-                    const SizedBox(width: 8),
-                    ...ServiceType.values.map((type) => Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: FilterChip(
-                            label: Text(_getServiceTypeLabel(type)),
-                            selected: _selectedFilter == type,
-                            onSelected: (selected) {
-                              setState(() =>
-                                  _selectedFilter = selected ? type : null);
-                            },
-                          ),
-                        )),
-                  ],
-                ),
-              ),
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      FilterChip(
+                        backgroundColor: ColorConstants.white,
+                        selectedColor: ColorConstants.primaryGold,
+                        checkmarkColor: ColorConstants.warmIvory,
+                        labelStyle: TextStyle(
+                          color: _selectedFilter == null
+                              ? ColorConstants.warmIvory
+                              : ColorConstants.primaryGold,
+                        ),
+                        label: Text(_tr('All Orders', 'جميع الطلبات')),
+                        selected: _selectedFilter == null,
+                        onSelected: (selected) {
+                          setState(() => _selectedFilter = null);
+                        },
+                      ),
+                      const SizedBox(width: 8),
+                      ...ServiceType.values.map((type) => Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: FilterChip(
+                              backgroundColor: ColorConstants.white,
+                              selectedColor: ColorConstants.primaryGold,
+                              checkmarkColor: ColorConstants.warmIvory,
+                              labelStyle: TextStyle(
+                                color: _selectedFilter == type
+                                    ? ColorConstants.warmIvory
+                                    : ColorConstants.primaryGold,
+                              ),
+                              label: Text(_getServiceTypeLabel(type)),
+                              selected: _selectedFilter == type,
+                              onSelected: (selected) {
+                                setState(() =>
+                                    _selectedFilter = selected ? type : null);
+                              },
+                            ),
+                          )),
+                    ],
+                  )),
             ),
 
             // Orders List
             Expanded(
               child: _filteredOrders.isEmpty
                   ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.shopping_bag_outlined,
-                            size: 64,
-                            color: theme.colorScheme.outline,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            _tr('No orders found', 'لا توجد طلبات'),
-                            style: theme.textTheme.titleMedium,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            _tr('Your orders will appear here',
-                                'ستظهر طلباتك هنا'),
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.outline,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 32),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Empty Illustration
+                            Image.asset(
+                              'assets/images/empty_orders.png', // ✅ Recommended: Add this image
+                              height: 180,
+                              width: 200,
+                              fit: BoxFit.contain,
+                              // Optional: If asset not found, fallback to Icon
+                              errorBuilder: (_, __, ___) => Icon(
+                                Icons.shopping_bag_outlined,
+                                size: 100,
+                                color: ColorConstants.accentTeal,
+                              ),
                             ),
-                          ),
-                        ],
+
+                            const SizedBox(height: 24),
+
+                            // Engaging Headline (Slogan)
+                            Text(
+                              _tr(
+                                'Your style journey starts here!',
+                                'رحلتك مع الأناقة تبدأ من هنا!',
+                              ),
+                              style: theme.textTheme.titleLarge?.copyWith(
+                                color: ColorConstants.deepNavy,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                              textAlign: TextAlign.center,
+                              softWrap: true,
+                            ),
+
+                            const SizedBox(height: 12),
+
+                            // Supportive Subtitle
+                            Text(
+                              _tr(
+                                'No orders yet? Place your first custom tailoring request and wear confidence.',
+                                'لا توجد طلبات بعد؟ اطلب خياطتك الأولى المخصصة وارتَ الثقة.',
+                              ),
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.outline,
+                                height: 1.5,
+                              ),
+                              textAlign: TextAlign.center,
+                              softWrap: true,
+                            ),
+
+                            const SizedBox(height: 24),
+
+                            // Optional: Call-to-action button (if you want to guide users)
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: ColorConstants.accentTeal,
+                                foregroundColor: ColorConstants.warmIvory,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 24, vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              onPressed: () {
+                                // Navigate to services or new order screen
+                                // Example: Navigator.push(context, MaterialPageRoute(builder: (_) => NewOrderScreen()));
+                              },
+                              child: Text(
+                                _tr('Start Ordering', 'ابدأ الطلب'),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     )
                   : ListView.builder(
@@ -141,6 +223,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     );
   }
 
+  /// Returns the localized label for a given [ServiceType].
   String _getServiceTypeLabel(ServiceType type) {
     switch (type) {
       case ServiceType.readymade:
@@ -152,6 +235,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     }
   }
 
+  /// Shows a modal bottom sheet with detailed information for the provided [order].
   void _showOrderDetails(Order order) {
     showModalBottomSheet(
       context: context,
@@ -216,12 +300,14 @@ class _OrderCard extends StatelessWidget {
   final String language;
   final VoidCallback onTap;
 
+  /// Creates a card widget to display summary information for a single [order].
   const _OrderCard({
     required this.order,
     required this.language,
     required this.onTap,
   });
 
+  /// Builds the card UI showing order title, status, tailor, date and amount.
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -337,6 +423,7 @@ class _OrderCard extends StatelessWidget {
     );
   }
 
+  /// Formats a [DateTime] to dd/mm/yyyy.
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year}';
   }
@@ -346,11 +433,13 @@ class _StatusBadge extends StatelessWidget {
   final OrderStatus status;
   final String language;
 
+  /// Creates a small colored badge representing the order [status].
   const _StatusBadge({
     required this.status,
     required this.language,
   });
 
+  /// Builds a decorated label indicating the current order status.
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -408,11 +497,13 @@ class _OrderDetailsContent extends StatelessWidget {
   final Order order;
   final String language;
 
+  /// Creates the details content shown inside the order details bottom sheet.
   const _OrderDetailsContent({
     required this.order,
     required this.language,
   });
 
+  /// Builds the detailed sections for order summary, requirements, address and status updates.
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -592,10 +683,12 @@ class _OrderDetailsContent extends StatelessWidget {
     );
   }
 
+  /// Formats a [DateTime] to dd/mm/yyyy.
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year}';
   }
 
+  /// Formats a [DateTime] to dd/mm/yyyy HH:mm.
   String _formatDateTime(DateTime date) {
     return '${date.day}/${date.month}/${date.year} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
   }
@@ -605,11 +698,13 @@ class _InfoRow extends StatelessWidget {
   final String label;
   final String value;
 
+  /// Creates a row displaying a small label and its corresponding [value].
   const _InfoRow({
     required this.label,
     required this.value,
   });
 
+  /// Builds the UI for a single information row used in the details view.
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
