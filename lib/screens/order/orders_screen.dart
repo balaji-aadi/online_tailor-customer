@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:khyate_tailor_app/constants/color_constant.dart';
+import 'package:khyate_tailor_app/constants/storage_constants.dart';
+import 'package:khyate_tailor_app/core/services/storage_services/storage_service.dart';
 import 'package:khyate_tailor_app/models/models.dart';
 import 'package:khyate_tailor_app/services/storage_service.dart';
+import 'package:khyate_tailor_app/utils/get_it.dart';
 
 class OrdersScreen extends StatefulWidget {
   /// Creates the Orders screen which lists and filters user orders.
@@ -16,6 +19,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   String _selectedLanguage = 'en';
   List<Order> _orders = [];
   ServiceType? _selectedFilter;
+    final _storageService = locator<StorageService>();
 
   /// Initializes state and triggers initial data load from storage.
   @override
@@ -28,11 +32,13 @@ class _OrdersScreenState extends State<OrdersScreen> {
   ///
   /// Sorts orders by descending order date after fetching.
   Future<void> _loadData() async {
-    final language = await StorageService.getLanguage();
-    final orders = await StorageService.getOrders();
+    final language = await _storageService.getString(
+      StorageConstants.selectedLanguage
+    );
+    // final orders = await StorageService.getOrders();
     setState(() {
-      _selectedLanguage = language;
-      _orders = orders..sort((a, b) => b.orderDate.compareTo(a.orderDate));
+      _selectedLanguage = language.toString();
+      // _orders = orders..sort((a, b) => b.orderDate.compareTo(a.orderDate));
     });
   }
 

@@ -15,6 +15,11 @@ class User {
   final String preferredLanguage;
   final List<String> addresses;
   final List<String> favoriteTailorIds;
+  final String dateOfBirth;
+  final String city;
+  final String age;
+  final String address;
+  final String? gender;
 
   User({
     required this.id,
@@ -25,6 +30,11 @@ class User {
     this.preferredLanguage = 'en',
     this.addresses = const [],
     this.favoriteTailorIds = const [],
+    this.dateOfBirth = '',
+    this.city = '',
+    this.age = '',
+    this.address = '',
+    this.gender = "",
   });
 
   Map<String, dynamic> toJson() => {
@@ -235,13 +245,11 @@ class Order {
         referenceImages: List<String>.from(json['referenceImages'] ?? []),
         deliveryAddress: json['deliveryAddress'],
         orderDate: DateTime.parse(json['orderDate']),
-        estimatedDelivery: json['estimatedDelivery'] != null
-            ? DateTime.parse(json['estimatedDelivery'])
-            : null,
-        statusUpdates: (json['statusUpdates'] as List?)
-                ?.map((e) => OrderStatusUpdate.fromJson(e))
-                .toList() ??
-            [],
+        estimatedDelivery:
+            json['estimatedDelivery'] != null ? DateTime.parse(json['estimatedDelivery']) : null,
+        statusUpdates:
+            (json['statusUpdates'] as List?)?.map((e) => OrderStatusUpdate.fromJson(e)).toList() ??
+                [],
       );
 }
 
@@ -265,8 +273,7 @@ class OrderStatusUpdate {
         'timestamp': timestamp.toIso8601String(),
       };
 
-  factory OrderStatusUpdate.fromJson(Map<String, dynamic> json) =>
-      OrderStatusUpdate(
+  factory OrderStatusUpdate.fromJson(Map<String, dynamic> json) => OrderStatusUpdate(
         status: OrderStatus.values.byName(json['status']),
         message: json['message'],
         messageAr: json['messageAr'],

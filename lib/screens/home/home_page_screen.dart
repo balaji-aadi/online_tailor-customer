@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:khyate_tailor_app/constants/color_constant.dart';
+import 'package:khyate_tailor_app/constants/storage_constants.dart';
+import 'package:khyate_tailor_app/core/services/storage_services/storage_service.dart';
 import 'package:khyate_tailor_app/data/sample_data.dart';
 import 'package:khyate_tailor_app/models/models.dart';
 import 'package:khyate_tailor_app/screens/service_detail_screen.dart';
 import 'package:khyate_tailor_app/services/storage_service.dart';
+import 'package:khyate_tailor_app/utils/get_it.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
@@ -20,7 +23,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
   List<Tailor> _filteredTailors = [];
   ServiceType? _selectedServiceType;
   final TextEditingController _searchController = TextEditingController();
-
+  final _storageService = locator<StorageService>();
   // Initializes widget state, loads language, and sets initial filtered tailors.
   @override
   void initState() {
@@ -31,8 +34,8 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
   // Loads the saved language from StorageService and updates the state.
   Future<void> _loadLanguage() async {
-    final language = await StorageService.getLanguage();
-    setState(() => _selectedLanguage = language);
+    final language = await _storageService.getString(StorageConstants.selectedLanguage);
+    setState(() => _selectedLanguage = language.toString());
   }
 
   // Translation helper: returns Arabic or English text based on selected language.
@@ -138,7 +141,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                       value: _selectedLanguage == 'ar',
                                       onChanged: (value) async {
                                         final newLang = value ? 'ar' : 'en';
-                                        await StorageService.setLanguage(
+                                        await _storageService.setString(StorageConstants.selectedLanguage,
                                             newLang);
                                         setState(
                                             () => _selectedLanguage = newLang);

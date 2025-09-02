@@ -1,81 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:khyate_tailor_app/app.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:khyate_tailor_app/constants/color_constant.dart';
-import 'package:khyate_tailor_app/constants/storage_constants.dart';
-import 'package:khyate_tailor_app/core/services/storage_services/storage_service.dart';
+import 'package:khyate_tailor_app/core/bloc/language_bloc/language_bloc.dart';
 import 'package:khyate_tailor_app/screens/auth/login_form.dart';
 import 'package:khyate_tailor_app/screens/home/home_screen.dart';
-import 'package:khyate_tailor_app/theme.dart';
-import 'package:khyate_tailor_app/utils/get_it.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final storage = locator<StorageService>();
-  await storage.init();
-  final selectedLang = await storage.getString(StorageConstants.selectedLanguage);
-  // Orientation & UI style
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  SystemChrome.setPreferredOrientations(
-    [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
-  );
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.dark,
-    systemNavigationBarColor: Colors.transparent,
-    systemNavigationBarIconBrightness: Brightness.dark,
-  ));
-  runApp(App(
-    seletedLagusge: selectedLang.toString(),
-  ));
-}
-
-class ZayyanApp extends StatefulWidget {
-  const ZayyanApp({super.key});
-
-  @override
-  State<ZayyanApp> createState() => _ZayyanAppState();
-}
-
-class _ZayyanAppState extends State<ZayyanApp> {
-  String _selectedLanguage = 'en';
-  final _storageService = locator<StorageService>();
-
-  @override
-  void initState() {
-    super.initState();
-    _loadLanguage();
-  }
-
-  Future<void> _loadLanguage() async {
-    final language = await _storageService.getString(StorageConstants.selectedLanguage);
-
-    setState(() => _selectedLanguage = language.toString());
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Zayyan - زين',
-      debugShowCheckedModeBanner: false,
-      locale: Locale(_selectedLanguage),
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en', ''),
-        Locale('ar', ''),
-      ],
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: ThemeMode.system,
-      home: SplashScreen(selectedLanguage: _selectedLanguage),
-    );
-  }
-}
 
 class SplashScreen extends StatefulWidget {
   final String selectedLanguage;
@@ -179,10 +107,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                 ? const HomeScreen()
                 : LoginScreen(
                     onLanguageChanged: (language) {
-                      (context.findAncestorStateOfType<_ZayyanAppState>())?.setState(() {
-                        (context.findAncestorStateOfType<_ZayyanAppState>())?._selectedLanguage =
-                            language;
-                      });
+                      BlocProvider.of<LanguageBloc>(context).add(ChangeLanguage(language));
                     },
                   ),
             transitionsBuilder: (context, animation, secondaryAnimation, child) {

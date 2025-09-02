@@ -33,11 +33,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
   }
 
   Future<void> _loadData() async {
-    final language = await StorageService.getLanguage();
-    final measurements = await StorageService.getMeasurements();
+    // final language = await StorageService.getLanguage();
+    // final measurements = await StorageService.getMeasurements();
     setState(() {
-      _selectedLanguage = language;
-      _measurements = measurements;
+      // _selectedLanguage = language;
+      // _measurements = measurements;
     });
   }
 
@@ -65,10 +65,10 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     // Simulate API call
     await Future.delayed(const Duration(seconds: 2));
 
-    final user = await StorageService.getCurrentUser();
+    // final user = await StorageService.getCurrentUser();
     final order = Order(
       id: 'order_${DateTime.now().millisecondsSinceEpoch}',
-      userId: user?.id ?? 'guest',
+      userId:  'guest',
       tailorId: widget.tailor.id,
       tailorName: widget.tailor.name,
       tailorNameAr: widget.tailor.nameAr,
@@ -94,7 +94,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
       ],
     );
 
-    await StorageService.saveOrder(order);
+    // await StorageService.saveOrder(order);
 
     setState(() => _isLoading = false);
 
@@ -123,7 +123,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
             IconButton(
               icon: const Icon(Icons.favorite_border),
               onPressed: () async {
-                await StorageService.toggleFavorite(widget.tailor.id);
+                // await StorageService.toggleFavorite(widget.tailor.id);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(_tr('Added to favorites', 'أضيف للمفضلة')),

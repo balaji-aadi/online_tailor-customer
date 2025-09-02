@@ -1,7 +1,9 @@
 // messages_screen.dart
 import 'package:flutter/material.dart';
 import 'package:khyate_tailor_app/constants/color_constant.dart';
-import 'package:khyate_tailor_app/services/storage_service.dart';
+import 'package:khyate_tailor_app/constants/storage_constants.dart';
+import 'package:khyate_tailor_app/core/services/storage_services/storage_service.dart';
+import 'package:khyate_tailor_app/utils/get_it.dart';
 
 class MessagesScreen extends StatefulWidget {
   const MessagesScreen({super.key});
@@ -13,6 +15,7 @@ class MessagesScreen extends StatefulWidget {
 
 class _MessagesScreenState extends State<MessagesScreen> {
   String _selectedLanguage = 'en';
+  final _storageService = locator<StorageService>();
 
   // Initializes state and triggers language loading.
   @override
@@ -23,10 +26,10 @@ class _MessagesScreenState extends State<MessagesScreen> {
 
   // Fetches saved language from StorageService and updates state if mounted.
   Future<void> _loadLanguage() async {
-    final language = await StorageService.getLanguage();
+    final language = await _storageService.getString(StorageConstants.selectedLanguage);
     if (mounted) {
       setState(() {
-        _selectedLanguage = language;
+        _selectedLanguage = language.toString();
       });
     }
   }
@@ -53,8 +56,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.message_outlined,
-                  size: 64, color: ColorConstants.deepNavy),
+              Icon(Icons.message_outlined, size: 64, color: ColorConstants.deepNavy),
               const SizedBox(height: 16),
               Text(
                 _tr('No messages right now', 'لا توجد رسائل في الوقت الحالي'),

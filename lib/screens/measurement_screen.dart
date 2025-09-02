@@ -22,11 +22,11 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
   }
 
   Future<void> _loadData() async {
-    final language = await StorageService.getLanguage();
-    final measurements = await StorageService.getMeasurements();
+    // final language = await StorageService.getLanguage();
+    // final measurements = await StorageService.getMeasurements();
     setState(() {
-      _selectedLanguage = language;
-      _measurements = measurements;
+      // _selectedLanguage = language;
+      // _measurements = measurements;
     });
   }
 
@@ -333,7 +333,7 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                                   : null,
                             );
 
-                            await StorageService.saveMeasurement(measurement);
+                            // await StorageService.saveMeasurement(measurement);
                             Navigator.of(context).pop();
                             _loadData();
 
@@ -393,7 +393,7 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
     );
 
     if (confirmed == true) {
-      await StorageService.deleteMeasurement(measurementId);
+      // await StorageService.deleteMeasurement(measurementId);
       _loadData();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

@@ -1,10 +1,13 @@
 // profile_screen.dart
 import 'package:flutter/material.dart';
 import 'package:khyate_tailor_app/constants/color_constant.dart';
+import 'package:khyate_tailor_app/constants/storage_constants.dart';
+import 'package:khyate_tailor_app/core/services/storage_services/storage_service.dart';
 import 'package:khyate_tailor_app/models/models.dart';
-import 'package:khyate_tailor_app/screens/auth/auth_screen.dart';
+import 'package:khyate_tailor_app/screens/auth/login_form.dart';
 import 'package:khyate_tailor_app/screens/measurement_screen.dart';
 import 'package:khyate_tailor_app/services/storage_service.dart';
+import 'package:khyate_tailor_app/utils/get_it.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -17,6 +20,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _selectedLanguage = 'en';
   User? _currentUser;
   Map<String, bool> _notificationSettings = {};
+  final _storageService = locator<StorageService>();
 
   @override
   void initState() {
@@ -25,14 +29,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _loadData() async {
-    final language = await StorageService.getLanguage();
-    final user = await StorageService.getCurrentUser();
-    final settings = await StorageService.getNotificationSettings();
+    final language = await _storageService.getString(StorageConstants.selectedLanguage);
+    // final user = await StorageService.getCurrentUser();
+    // final settings = await StorageService.getNotificationSettings();
 
     setState(() {
-      _selectedLanguage = language;
-      _currentUser = user;
-      _notificationSettings = settings;
+      _selectedLanguage = language.toString();
+      // _currentUser = user;
+      // _notificationSettings = settings;
     });
   }
 
@@ -147,14 +151,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 favoriteTailorIds: _currentUser!.favoriteTailorIds,
               );
 
-              await StorageService.saveUser(updatedUser);
+              // await StorageService.saveUser(updatedUser);
               Navigator.of(context).pop();
               _loadData();
 
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content:
-                      Text(_tr('Profile updated', 'تم تحديث الملف الشخصي')),
+                  content: Text(_tr('Profile updated', 'تم تحديث الملف الشخصي')),
                   backgroundColor: ColorConstants.success,
                 ),
               );
@@ -200,13 +203,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _changeLanguage(String language) async {
-    await StorageService.setLanguage(language);
+    await _storageService.setString(StorageConstants.selectedLanguage,_selectedLanguage);
     Navigator.of(context).pop();
 
     // Restart the app to apply language changes
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
-        builder: (context) => AuthScreen(onLanguageChanged: (_) {}),
+        builder: (context) => LoginScreen(onLanguageChanged: (_) {}),
       ),
       (route) => false,
     );
@@ -214,15 +217,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _updateNotificationSetting(String key, bool value) async {
     _notificationSettings[key] = value;
-    await StorageService.updateNotificationSettings(_notificationSettings);
+    // await StorageService.updateNotificationSettings(_notificationSettings);
     setState(() {});
   }
 
   void _showFavorites() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text(_tr('Favorites feature coming soon', 'ميزة المفضلة قريباً')),
+        content: Text(_tr('Favorites feature coming soon', 'ميزة المفضلة قريباً')),
         backgroundColor: ColorConstants.warning,
       ),
     );
@@ -256,16 +258,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               _FAQItem(
-                question:
-                    _tr('How do I save my measurements?', 'كيف أحفظ قياساتي؟'),
+                question: _tr('How do I save my measurements?', 'كيف أحفظ قياساتي؟'),
                 answer: _tr(
                   'Go to Profile > My Measurements and add your body measurements.',
                   'اذهب إلى الملف الشخصي > قياساتي وأضف قياسات جسمك.',
                 ),
               ),
               _FAQItem(
-                question:
-                    _tr('How can I track my order?', 'كيف يمكنني تتبع طلبي؟'),
+                question: _tr('How can I track my order?', 'كيف يمكنني تتبع طلبي؟'),
                 answer: _tr(
                   'Check the Orders tab to see the status of all your orders.',
                   'تحقق من تبويب الطلبات لرؤية حالة جميع طلباتك.',
@@ -312,8 +312,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _ContactItem(
               icon: Icons.location_on,
               label: _tr('Address', 'العنوان'),
-              value: _tr('Dubai, United Arab Emirates',
-                  'دبي، الإمارات العربية المتحدة'),
+              value: _tr('Dubai, United Arab Emirates', 'دبي، الإمارات العربية المتحدة'),
             ),
           ],
         ),
@@ -386,11 +385,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
 
     if (confirmed == true) {
-      await StorageService.clearUser();
+      // await StorageService.clearUser();
       if (mounted) {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-            builder: (context) => AuthScreen(onLanguageChanged: (_) {}),
+            builder: (context) => LoginScreen(onLanguageChanged: (_) {}),
           ),
           (route) => false,
         );
@@ -401,7 +400,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _signIn() {
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
-        builder: (context) => AuthScreen(onLanguageChanged: (_) {}),
+        builder: (context) => LoginScreen(onLanguageChanged: (_) {}),
       ),
       (route) => false,
     );
@@ -469,14 +468,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   : Container(
                                       decoration: const BoxDecoration(
                                         shape: BoxShape.circle,
-                                        gradient:
-                                            ColorConstants.primaryGradient,
+                                        gradient: ColorConstants.primaryGradient,
                                       ),
                                       child: Center(
                                         child: Text(
-                                          _currentUser!.name
-                                              .substring(0, 1)
-                                              .toUpperCase(),
+                                          _currentUser!.name.substring(0, 1).toUpperCase(),
                                           style: const TextStyle(
                                             fontSize: 28,
                                             color: ColorConstants.warmIvory,
@@ -496,13 +492,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: ColorConstants.primaryGold,
                                   shape: BoxShape.circle,
                                   border: Border.fromBorderSide(
-                                    BorderSide(
-                                        color: ColorConstants.warmIvory,
-                                        width: 2),
+                                    BorderSide(color: ColorConstants.warmIvory, width: 2),
                                   ),
                                 ),
-                                child: const Icon(Icons.edit,
-                                    size: 14, color: Colors.white),
+                                child: const Icon(Icons.edit, size: 14, color: Colors.white),
                               ),
                             ),
                           ],
@@ -562,8 +555,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         CircleAvatar(
                           radius: 40,
-                          backgroundColor:
-                              ColorConstants.accentTeal.withOpacity(0.2),
+                          backgroundColor: ColorConstants.accentTeal.withOpacity(0.2),
                           child: Icon(
                             Icons.person_outline,
                             size: 50,
@@ -607,8 +599,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: Icons.straighten,
                       iconColor: ColorConstants.primaryGold,
                       title: _tr('My Measurements', 'قياساتي'),
-                      subtitle: _tr(
-                          'Manage your body measurements', 'إدارة قياسات جسمك'),
+                      subtitle: _tr('Manage your body measurements', 'إدارة قياسات جسمك'),
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => const MeasurementScreen(),
@@ -620,8 +611,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: Icons.favorite,
                       iconColor: ColorConstants.primaryGold,
                       title: _tr('Favorites', 'المفضلة'),
-                      subtitle: _tr(
-                          'Your favorite tailors', 'الخياطون المفضلون لديك'),
+                      subtitle: _tr('Your favorite tailors', 'الخياطون المفضلون لديك'),
                       onTap: () => _showFavorites(),
                     ),
                   _MenuItem(
@@ -645,11 +635,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     title: _tr('Order Updates', 'تحديثات الطلبات'),
                     trailing: Switch(
                       activeColor: ColorConstants.primaryGold,
-                      inactiveTrackColor:
-                          ColorConstants.accentTeal.withOpacity(0.3),
+                      inactiveTrackColor: ColorConstants.accentTeal.withOpacity(0.3),
                       value: _notificationSettings['orderUpdates'] ?? true,
-                      onChanged: (value) =>
-                          _updateNotificationSetting('orderUpdates', value),
+                      onChanged: (value) => _updateNotificationSetting('orderUpdates', value),
                     ),
                   ),
                   _MenuItem(
@@ -658,11 +646,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     title: _tr('Messages', 'الرسائل'),
                     trailing: Switch(
                       activeColor: ColorConstants.primaryGold,
-                      inactiveTrackColor:
-                          ColorConstants.accentTeal.withOpacity(0.3),
+                      inactiveTrackColor: ColorConstants.accentTeal.withOpacity(0.3),
                       value: _notificationSettings['messages'] ?? true,
-                      onChanged: (value) =>
-                          _updateNotificationSetting('messages', value),
+                      onChanged: (value) => _updateNotificationSetting('messages', value),
                     ),
                   ),
                   _MenuItem(
@@ -671,11 +657,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     title: _tr('Measurement Requests', 'طلبات القياسات'),
                     trailing: Switch(
                       activeColor: ColorConstants.primaryGold,
-                      inactiveTrackColor:
-                          ColorConstants.accentTeal.withOpacity(0.3),
+                      inactiveTrackColor: ColorConstants.accentTeal.withOpacity(0.3),
                       value: _notificationSettings['measurements'] ?? true,
-                      onChanged: (value) =>
-                          _updateNotificationSetting('measurements', value),
+                      onChanged: (value) => _updateNotificationSetting('measurements', value),
                     ),
                   ),
                   _MenuItem(
@@ -684,11 +668,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     title: _tr('Promotions', 'العروض'),
                     trailing: Switch(
                       activeColor: ColorConstants.primaryGold,
-                      inactiveTrackColor:
-                          ColorConstants.accentTeal.withOpacity(0.3),
+                      inactiveTrackColor: ColorConstants.accentTeal.withOpacity(0.3),
                       value: _notificationSettings['promotions'] ?? false,
-                      onChanged: (value) =>
-                          _updateNotificationSetting('promotions', value),
+                      onChanged: (value) => _updateNotificationSetting('promotions', value),
                     ),
                   ),
                 ],
@@ -710,8 +692,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     icon: Icons.contact_support,
                     iconColor: ColorConstants.primaryGold,
                     title: _tr('Contact Us', 'اتصل بنا'),
-                    subtitle:
-                        _tr('Get in touch with our team', 'تواصل مع فريقنا'),
+                    subtitle: _tr('Get in touch with our team', 'تواصل مع فريقنا'),
                     onTap: () => _showContactInfo(),
                   ),
                   _MenuItem(

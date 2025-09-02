@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:khyate_tailor_app/constants/color_constant.dart';
+import 'package:khyate_tailor_app/constants/storage_constants.dart';
+import 'package:khyate_tailor_app/core/services/storage_services/storage_service.dart';
 import 'package:khyate_tailor_app/screens/home/home_page_screen.dart';
 import 'package:khyate_tailor_app/screens/message/messages_screen.dart';
 import 'package:khyate_tailor_app/screens/order/orders_screen.dart';
 import 'package:khyate_tailor_app/screens/profile/profile_screen.dart';
 import 'package:khyate_tailor_app/services/storage_service.dart';
+import 'package:khyate_tailor_app/utils/get_it.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   String _selectedLanguage = 'en';
+    final _storageService = locator<StorageService>();
 
   @override
   void initState() {
@@ -24,8 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadLanguage() async {
-    final language = await StorageService.getLanguage();
-    setState(() => _selectedLanguage = language);
+    final language = await _storageService.getString(StorageConstants.selectedLanguage);
+    setState(() => _selectedLanguage = language.toString());
   }
 
   String _tr(String en, String ar) => _selectedLanguage == 'ar' ? ar : en;
